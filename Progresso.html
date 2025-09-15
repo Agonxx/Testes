@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Relatório de Evolução Corporal - Junho a Agosto 2025</title>
+    <title>Relatório de Evolução Corporal - Junho a Setembro 2025</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
@@ -44,59 +44,58 @@
             .header h1 { font-size:1.6rem; }
             .chart-wrapper { height:360px; }
         }
-        /* small visual tweak for positive/negative */
-        .plus { color:#b8f1b1; } /* light green */
-        .minus { color:#ffd1d1; } /* light red */
+        .plus { color:#b8f1b1; }
+        .minus { color:#ffd1d1; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>Relatório de Evolução Corporal</h1>
-            <p>Comparativo Junho → Agosto 2025</p>
+            <p>Comparativo Junho → Setembro 2025</p>
         </div>
 
         <div class="content">
-            <!-- Resumo das principais mudanças (Junho -> Agosto) -->
+            <!-- Resumo -->
             <div class="summary">
                 <div class="summary-card">
                     <h3>Perda de Peso</h3>
-                    <div class="value">-5,50 kg</div>
-                    <div class="change">94,00 → 88,50 kg</div>
+                    <div class="value">-6,20 kg</div>
+                    <div class="change">94,00 → 87,80 kg</div>
                 </div>
 
                 <div class="summary-card">
                     <h3>Redução IMC</h3>
-                    <div class="value">-1,66</div>
-                    <div class="change">28,38 → 26,72</div>
+                    <div class="value">-1,87</div>
+                    <div class="change">28,38 → 26,51</div>
                 </div>
 
                 <div class="summary-card">
                     <h3>Perda de Gordura (kg)</h3>
-                    <div class="value">-8,94 kg</div>
-                    <div class="change">20,06 → 11,12 kg</div>
+                    <div class="value">-10,21 kg</div>
+                    <div class="change">20,06 → 9,85 kg</div>
                 </div>
 
                 <div class="summary-card">
                     <h3>Ganho Massa Magra (kg)</h3>
-                    <div class="value">+3,44 kg</div>
-                    <div class="change">73,94 → 77,38 kg</div>
+                    <div class="value">+4,01 kg</div>
+                    <div class="change">73,94 → 77,95 kg</div>
                 </div>
 
                 <div class="summary-card">
                     <h3>% Massa Gorda</h3>
-                    <div class="value">-8,77%</div>
-                    <div class="change">21,34% → 12,57%</div>
+                    <div class="value">-10,12%</div>
+                    <div class="change">21,34% → 11,22%</div>
                 </div>
 
                 <div class="summary-card">
                     <h3>% Massa Magra</h3>
-                    <div class="value">+8,77%</div>
-                    <div class="change">78,66% → 87,43%</div>
+                    <div class="value">+10,12%</div>
+                    <div class="change">78,66% → 88,78%</div>
                 </div>
             </div>
 
-            <!-- Gráficos de Métricas Principais -->
+            <!-- Gráficos -->
             <div class="charts-section">
                 <h2 class="section-title">Métricas Principais</h2>
                 <div class="charts-grid">
@@ -108,7 +107,6 @@
                 </div>
             </div>
 
-            <!-- Circunferências -->
             <div class="charts-section">
                 <h2 class="section-title">Circunferências</h2>
                 <div class="charts-grid">
@@ -120,7 +118,6 @@
                 </div>
             </div>
 
-            <!-- Dobras Cutâneas -->
             <div class="charts-section">
                 <h2 class="section-title">Dobras Cutâneas</h2>
                 <div class="charts-grid">
@@ -135,265 +132,59 @@
     </div>
 
     <script>
-        // Font config
         Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
         Chart.defaults.font.size = 12;
 
-        // Dados (Junho, Julho, Agosto — Agosto extraído da sua imagem)
         const data = {
-            junho: {
-                peso: 94.0, imc: 28.38,
-                massaGordaPercent: 21.34, massaMagraPercent: 78.66,
-                massaGordaKg: 20.06, massaMagraKg: 73.94,
-                razaoCinturaQuadril: 0.85, somaDobrasCutaneas: 150.0,
-                amb: 63.68, agb: 22.98,
-                circunferencias: {
-                    ombro: 130.0, cintura: 93.0, quadril: 109.0, peitoral: 103.0, abdomen: 97.0,
-                    coxa: 55.0, panturrilhaEsq: 39.0, panturrilhaDir: 38.0,
-                    bracoRelaxado: 33.0, bracoContraido: 36.0, punho: 17.0,
-                    antebracoEsq: 29.0, antebracoDir: 28.0
-                },
-                dobras: {
-                    abdominal: 33.0, supraIliaca: 20.0, subescapular: 23.0, coxa: 27.0,
-                    triceps: 15.0, axilarMedia: 15.0, torax: 17.0
-                }
+            junho: { peso:94.0, imc:28.38, massaGordaPercent:21.34, massaMagraPercent:78.66, massaGordaKg:20.06, massaMagraKg:73.94, razaoCinturaQuadril:0.85, somaDobrasCutaneas:150.0, amb:63.68, agb:22.98,
+                circunferencias:{ ombro:130.0, cintura:93.0, quadril:109.0, peitoral:103.0, abdomen:97.0, coxa:55.0, panturrilhaEsq:39.0, panturrilhaDir:38.0, bracoRelaxado:33.0, bracoContraido:36.0, punho:17.0, antebracoEsq:29.0, antebracoDir:28.0 },
+                dobras:{ abdominal:33.0, supraIliaca:20.0, subescapular:23.0, coxa:27.0, triceps:15.0, axilarMedia:15.0, torax:17.0 }
             },
-            julho: {
-                peso: 89.1, imc: 26.90,
-                massaGordaPercent: 15.11, massaMagraPercent: 84.89,
-                massaGordaKg: 13.47, massaMagraKg: 75.63,
-                razaoCinturaQuadril: 0.80, somaDobrasCutaneas: 102.5,
-                amb: 72.45, agb: 14.21,
-                circunferencias: {
-                    ombro: 125.0, cintura: 85.0, quadril: 106.0, peitoral: 100.0, abdomen: 90.0,
-                    coxa: 55.0, panturrilhaEsq: 39.0, panturrilhaDir: 39.0,
-                    bracoRelaxado: 32.5, bracoContraido: 35.5, punho: 17.0,
-                    antebracoEsq: 27.0, antebracoDir: 27.0
-                },
-                dobras: {
-                    abdominal: 23.0, supraIliaca: 14.0, subescapular: 19.0, coxa: 17.0,
-                    triceps: 9.0, axilarMedia: 9.5, torax: 11.0
-                }
+            julho: { peso:89.1, imc:26.90, massaGordaPercent:15.11, massaMagraPercent:84.89, massaGordaKg:13.47, massaMagraKg:75.63, razaoCinturaQuadril:0.80, somaDobrasCutaneas:102.5, amb:72.45, agb:14.21,
+                circunferencias:{ ombro:125.0, cintura:85.0, quadril:106.0, peitoral:100.0, abdomen:90.0, coxa:55.0, panturrilhaEsq:39.0, panturrilhaDir:39.0, bracoRelaxado:32.5, bracoContraido:35.5, punho:17.0, antebracoEsq:27.0, antebracoDir:27.0 },
+                dobras:{ abdominal:23.0, supraIliaca:14.0, subescapular:19.0, coxa:17.0, triceps:9.0, axilarMedia:9.5, torax:11.0 }
             },
-            agosto: {
-                peso: 88.5, imc: 26.72,
-                massaGordaPercent: 12.57, massaMagraPercent: 87.43,
-                massaGordaKg: 11.12, massaMagraKg: 77.38,
-                razaoCinturaQuadril: 0.80, somaDobrasCutaneas: 84.0,
-                amb: 69.19, agb: 12.30,
-                circunferencias: {
-                    ombro: 124.0, cintura: 84.0, quadril: 105.0, peitoral: 101.0, abdomen: 88.0,
-                    coxa: 55.5, panturrilhaEsq: 39.0, panturrilhaDir: 40.0,
-                    bracoRelaxado: 32.0, bracoContraido: 35.0, punho: 17.0,
-                    antebracoEsq: 28.0, antebracoDir: 27.0
-                },
-                dobras: {
-                    abdominal: 19.0, supraIliaca: 11.0, subescapular: 17.0, coxa: 15.0,
-                    triceps: 8.0, axilarMedia: 8.0, torax: 6.0
-                }
+            agosto: { peso:88.5, imc:26.72, massaGordaPercent:12.57, massaMagraPercent:87.43, massaGordaKg:11.12, massaMagraKg:77.38, razaoCinturaQuadril:0.80, somaDobrasCutaneas:84.0, amb:69.19, agb:12.30,
+                circunferencias:{ ombro:124.0, cintura:84.0, quadril:105.0, peitoral:101.0, abdomen:88.0, coxa:55.5, panturrilhaEsq:39.0, panturrilhaDir:40.0, bracoRelaxado:32.0, bracoContraido:35.0, punho:17.0, antebracoEsq:28.0, antebracoDir:27.0 },
+                dobras:{ abdominal:19.0, supraIliaca:11.0, subescapular:17.0, coxa:15.0, triceps:8.0, axilarMedia:8.0, torax:6.0 }
+            },
+            setembro: { peso:87.8, imc:26.51, massaGordaPercent:11.22, massaMagraPercent:88.78, massaGordaKg:9.85, massaMagraKg:77.95, razaoCinturaQuadril:0.78, somaDobrasCutaneas:75.0, amb:64.58, agb:11.90,
+                circunferencias:{ ombro:126.0, cintura:81.0, quadril:104.0, peitoral:103.0, abdomen:86.0, coxa:55.5, panturrilhaEsq:38.0, panturrilhaDir:39.0, bracoRelaxado:31.0, bracoContraido:34.5, punho:16.0, antebracoEsq:28.0, antebracoDir:28.0 },
+                dobras:{ abdominal:17.0, supraIliaca:10.0, subescapular:16.0, coxa:13.0, triceps:8.0, axilarMedia:6.0, torax:5.0 }
             }
         };
 
-        // Cores: Junho, Julho, Agosto
         const colors = {
-            junho: 'rgba(255, 99, 132, 0.8)',
-            julho: 'rgba(54, 162, 235, 0.8)',
-            agosto: 'rgba(255, 206, 86, 0.85)',
-            junhoBorder: 'rgba(255, 99, 132, 1)',
-            julhoBorder: 'rgba(54, 162, 235, 1)',
-            agostoBorder: 'rgba(255, 206, 86, 1)'
+            junho:'rgba(255, 99, 132, 0.8)', julho:'rgba(54, 162, 235, 0.8)', agosto:'rgba(255, 206, 86, 0.85)', setembro:'rgba(75, 192, 192, 0.8)',
+            junhoBorder:'rgba(255, 99, 132, 1)', julhoBorder:'rgba(54, 162, 235, 1)', agostoBorder:'rgba(255, 206, 86, 1)', setembroBorder:'rgba(75, 192, 192, 1)'
         };
 
-        // ---------- Gráfico: Métricas Principais ----------
+        // ---------- Charts ----------
         (function() {
             const ctx = document.getElementById('mainMetricsChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Peso (kg)', 'IMC', 'Massa Gorda (kg)', 'Massa Magra (kg)', 'Razão C/Q (x100)', 'Soma Dobras (mm)'],
-                    datasets: [
-                        {
-                            label: 'Junho',
-                            data: [
-                                data.junho.peso,
-                                data.junho.imc,
-                                data.junho.massaGordaKg,
-                                data.junho.massaMagraKg,
-                                +(data.junho.razaoCinturaQuadril * 100).toFixed(2),
-                                data.junho.somaDobrasCutaneas
-                            ],
-                            backgroundColor: colors.junho,
-                            borderColor: colors.junhoBorder,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Julho',
-                            data: [
-                                data.julho.peso,
-                                data.julho.imc,
-                                data.julho.massaGordaKg,
-                                data.julho.massaMagraKg,
-                                +(data.julho.razaoCinturaQuadril * 100).toFixed(2),
-                                data.julho.somaDobrasCutaneas
-                            ],
-                            backgroundColor: colors.julho,
-                            borderColor: colors.julhoBorder,
-                            borderWidth: 2
-                        },
-                        {
-                            label: 'Agosto',
-                            data: [
-                                data.agosto.peso,
-                                data.agosto.imc,
-                                data.agosto.massaGordaKg,
-                                data.agosto.massaMagraKg,
-                                +(data.agosto.razaoCinturaQuadril * 100).toFixed(2),
-                                data.agosto.somaDobrasCutaneas
-                            ],
-                            backgroundColor: colors.agosto,
-                            borderColor: colors.agostoBorder,
-                            borderWidth: 2
-                        }
+            new Chart(ctx,{
+                type:'bar',
+                data:{
+                    labels:['Peso (kg)','IMC','Massa Gorda (kg)','Massa Magra (kg)','Razão C/Q (x100)','Soma Dobras (mm)'],
+                    datasets:[
+                        { label:'Junho', data:[data.junho.peso,data.junho.imc,data.junho.massaGordaKg,data.junho.massaMagraKg,+(data.junho.razaoCinturaQuadril*100).toFixed(2),data.junho.somaDobrasCutaneas], backgroundColor:colors.junho, borderColor:colors.junhoBorder, borderWidth:2 },
+                        { label:'Julho', data:[data.julho.peso,data.julho.imc,data.julho.massaGordaKg,data.julho.massaMagraKg,+(data.julho.razaoCinturaQuadril*100).toFixed(2),data.julho.somaDobrasCutaneas], backgroundColor:colors.julho, borderColor:colors.julhoBorder, borderWidth:2 },
+                        { label:'Agosto', data:[data.agosto.peso,data.agosto.imc,data.agosto.massaGordaKg,data.agosto.massaMagraKg,+(data.agosto.razaoCinturaQuadril*100).toFixed(2),data.agosto.somaDobrasCutaneas], backgroundColor:colors.agosto, borderColor:colors.agostoBorder, borderWidth:2 },
+                        { label:'Setembro', data:[data.setembro.peso,data.setembro.imc,data.setembro.massaGordaKg,data.setembro.massaMagraKg,+(data.setembro.razaoCinturaQuadril*100).toFixed(2),data.setembro.somaDobrasCutaneas], backgroundColor:colors.setembro, borderColor:colors.setembroBorder, borderWidth:2 }
                     ]
                 },
-                options: {
-                    responsive:true, maintainAspectRatio:false,
-                    plugins:{ legend:{ position:'top' } },
-                    scales: {
-                        y: { beginAtZero:true, grid:{ color:'rgba(0,0,0,0.08)' } },
-                        x: { grid:{ display:false } }
-                    }
-                }
+                options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'top'}}, scales:{ y:{beginAtZero:true}, x:{grid:{display:false}} } }
             });
         })();
 
-        // ---------- Gráfico: Todas as Circunferências ----------
         (function() {
             const ctx = document.getElementById('allCircumferencesChart').getContext('2d');
-            const labels = ['Ombro','Cintura','Quadril','Peitoral','Abdômen','Coxa','Panturrilha','Braço Contraído','Punho','Antebraço'];
+            const labels=['Ombro','Cintura','Quadril','Peitoral','Abdômen','Coxa','Panturrilha','Braço Contraído','Punho','Antebraço'];
             function avg(a,b){ return ((a||0)+(b||0))/2; }
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [
-                        {
-                            label: 'Junho',
-                            data: [
-                                data.junho.circunferencias.ombro,
-                                data.junho.circunferencias.cintura,
-                                data.junho.circunferencias.quadril,
-                                data.junho.circunferencias.peitoral,
-                                data.junho.circunferencias.abdomen,
-                                data.junho.circunferencias.coxa,
-                                avg(data.junho.circunferencias.panturrilhaEsq, data.junho.circunferencias.panturrilhaDir),
-                                data.junho.circunferencias.bracoContraido,
-                                data.junho.circunferencias.punho,
-                                avg(data.junho.circunferencias.antebracoEsq, data.junho.circunferencias.antebracoDir)
-                            ],
-                            backgroundColor: colors.junho,
-                            borderColor: colors.junhoBorder, borderWidth:2
-                        },
-                        {
-                            label: 'Julho',
-                            data: [
-                                data.julho.circunferencias.ombro,
-                                data.julho.circunferencias.cintura,
-                                data.julho.circunferencias.quadril,
-                                data.julho.circunferencias.peitoral,
-                                data.julho.circunferencias.abdomen,
-                                data.julho.circunferencias.coxa,
-                                avg(data.julho.circunferencias.panturrilhaEsq, data.julho.circunferencias.panturrilhaDir),
-                                data.julho.circunferencias.bracoContraido,
-                                data.julho.circunferencias.punho,
-                                avg(data.julho.circunferencias.antebracoEsq, data.julho.circunferencias.antebracoDir)
-                            ],
-                            backgroundColor: colors.julho,
-                            borderColor: colors.julhoBorder, borderWidth:2
-                        },
-                        {
-                            label: 'Agosto',
-                            data: [
-                                data.agosto.circunferencias.ombro,
-                                data.agosto.circunferencias.cintura,
-                                data.agosto.circunferencias.quadril,
-                                data.agosto.circunferencias.peitoral,
-                                data.agosto.circunferencias.abdomen,
-                                data.agosto.circunferencias.coxa,
-                                avg(data.agosto.circunferencias.panturrilhaEsq, data.agosto.circunferencias.panturrilhaDir),
-                                data.agosto.circunferencias.bracoContraido,
-                                data.agosto.circunferencias.punho,
-                                avg(data.agosto.circunferencias.antebracoEsq, data.agosto.circunferencias.antebracoDir)
-                            ],
-                            backgroundColor: colors.agosto,
-                            borderColor: colors.agostoBorder, borderWidth:2
-                        }
-                    ]
-                },
-                options: {
-                    responsive:true, maintainAspectRatio:false,
-                    plugins:{ legend:{ position:'top' } },
-                    scales: {
-                        y:{ beginAtZero:true, grid:{ color:'rgba(0,0,0,0.08)' } },
-                        x:{ grid:{ display:false } }
-                    }
-                }
-            });
-        })();
-
-        // ---------- Gráfico: Dobras Cutâneas ----------
-        (function() {
-            const ctx = document.getElementById('skinfoldChart').getContext('2d');
-            const labels = ['Abdominal','Supra-ilíaca','Subescapular','Coxa','Tríceps','Axilar Média','Tórax'];
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [
-                        {
-                            label: 'Junho',
-                            data: labels.map(l => data.junho.dobras[camelize(l)]),
-                            backgroundColor: colors.junho,
-                            borderColor: colors.junhoBorder, borderWidth:2
-                        },
-                        {
-                            label: 'Julho',
-                            data: labels.map(l => data.julho.dobras[camelize(l)]),
-                            backgroundColor: colors.julho,
-                            borderColor: colors.julhoBorder, borderWidth:2
-                        },
-                        {
-                            label: 'Agosto',
-                            data: labels.map(l => data.agosto.dobras[camelize(l)]),
-                            backgroundColor: colors.agosto,
-                            borderColor: colors.agostoBorder, borderWidth:2
-                        }
-                    ]
-                },
-                options: {
-                    responsive:true, maintainAspectRatio:false,
-                    plugins:{ legend:{ position:'top' } },
-                    scales: {
-                        y:{ beginAtZero:true, grid:{ color:'rgba(0,0,0,0.08)' } },
-                        x:{ grid:{ display:false } }
-                    }
-                }
-            });
-
-            // helper to map label to object key used in data.*.dobras
-            function camelize(label) {
-                // simple mapping because some labels have hyphen or accent
-                return label
-                    .replace('Supra-ilíaca','supraIliaca')
-                    .replace('Subescapular','subescapular')
-                    .replace('Tríceps','triceps')
-                    .replace('Axilar Média','axilarMedia')
-                    .replace('Abdominal','abdominal')
-                    .replace('Coxa','coxa')
-                    .replace('Tórax','torax');
-            }
-        })();
-
-    </script>
-</body>
-</html>
+            new Chart(ctx,{
+                type:'bar',
+                data:{ labels, datasets:[
+                    { label:'Junho', data:[data.junho.circunferencias.ombro,data.junho.circunferencias.cintura,data.junho.circunferencias.quadril,data.junho.circunferencias.peitoral,data.junho.circunferencias.abdomen,data.junho.circunferencias.coxa,avg(data.junho.circunferencias.panturrilhaEsq,data.junho.circunferencias.panturrilhaDir),data.junho.circunferencias.bracoContraido,data.junho.circunferencias.punho,avg(data.junho.circunferencias.antebracoEsq,data.junho.circunferencias.antebracoDir)], backgroundColor:colors.junho, borderColor:colors.junhoBorder, borderWidth:2 },
+                    { label:'Julho', data:[data.julho.circunferencias.ombro,data.julho.circunferencias.cintura,data.julho.circunferencias.quadril,data.julho.circunferencias.peitoral,data.julho.circunferencias.abdomen,data.julho.circunferencias.coxa,avg(data.julho.circunferencias.panturrilhaEsq,data.julho.circunferencias.panturrilhaDir),data.julho.circunferencias.bracoContraido,data.julho.circunferencias.punho,avg(data.julho.circunferencias.antebracoEsq,data.julho.circunferencias.antebracoDir)], backgroundColor:colors.julho, borderColor:colors.julhoBorder, borderWidth:2 },
+                    { label:'Agosto', data:[data.agosto.circunferencias.ombro,data.agosto.circunferencias.cintura,data.agosto.circunferencias.quadril,data.agosto.circunferencias.peitoral,data.agosto.circunferencias.abdomen,data.agosto.circunferencias.coxa,avg(data.agosto.circunferencias.panturrilhaEsq,data.agosto.circunferencias.panturrilhaDir),data.agosto.circunferencias.bracoContraido,data.agosto.circunferencias.punho,avg(data.agosto.circunferencias.antebracoEsq,data.agosto.circunferencias.antebracoDir)], backgroundColor:colors.agosto, borderColor:colors.agostoBorder, borderWidth:2 },
+                    { label:'Setembro', data:[data.setembro.circunferencias.ombro,data.setembro.circunferencias.cintura,data.setembro.circunferencias.quadril,data.setembro.circunferencias.peitoral,data.setembro.circunferencias.abdomen,data.setembro.circunferencias.coxa,avg(data.setembro.circunferencias.panturrilhaEsq,data.setembro.circunferencias.panturrilhaDir),data.setembro.circunferencias.bracoContraido,data.setembro.circunferencias.punho,avg(data.setembro.circunferencias.antebracoEsq,data.setembro.circunferencias.antebracoDir)], backgroundColor:colors.setembro, borderColor:colors.setembroBorder, borderWidth:2
