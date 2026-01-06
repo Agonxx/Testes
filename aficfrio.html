@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Afic Frio - Assistência Técnica Especializada</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1e293b;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            max-width: 200px;
+            height: auto;
+        }
+
+        .header-contact {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .phone-btn {
+            background: #1e40af;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .phone-btn:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e40af;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .benefits-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefits h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #1e40af;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .benefit-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .benefit-card p {
+            color: #64748b;
+        }
+
+        /* Brands Section */
+        .brands {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .brands-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .brands h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #1e40af;
+        }
+
+        .brands-images {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .brand-section {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .brand-section h3 {
+            color: #475569;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            text-align: center;
+        }
+
+        .brand-section img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* About Section */
+        .about {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .about-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #1e40af;
+        }
+
+        .about-highlight {
+            text-align: center;
+            font-size: 1.25rem;
+            color: #dc2626;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .about-text {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            color: #475569;
+        }
+
+        .about-text strong {
+            color: #1e40af;
+        }
+
+        .about-highlight-red {
+            color: #dc2626;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .about-address {
+            text-align: center;
+            background: #1e40af;
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .about-coverage {
+            text-align: center;
+            font-size: 1.25rem;
+            color: #dc2626;
+            font-weight: 700;
+            margin-bottom: 3rem;
+        }
+
+        .mission-vision-values {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .mvv-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mvv-card h3 {
+            color: #dc2626;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .mvv-card p {
+            color: #475569;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        .values-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .values-list li {
+            color: #475569;
+            padding: 0.5rem 0;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* Contact Form & Location Section */
+        .contact-form-section {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .contact-form-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-form-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #1e40af;
+        }
+
+        .form-map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 3rem;
+        }
+
+        .form-container {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h3 {
+            color: #1e40af;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 0.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #334155;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1e40af;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: #1e40af;
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+        }
+
+        .map-container {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .map-container h3 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .map-container p {
+            color: #475569;
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 4rem 2rem;
+            background: #f8fafc;
+        }
+
+        .contact-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact h2 {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            color: #1e40af;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .contact-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .contact-card h3 {
+            color: #1e40af;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .contact-item strong {
+            color: #1e40af;
+            min-width: 100px;
+        }
+
+        /* Footer */
+        footer {
+            background: #1e293b;
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        /* WhatsApp Float Button */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #25d366;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .cta-group {
+                flex-direction: column;
+            }
+
+            .header-contact {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Responsive styles for form and map */
+            .form-map-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .map-container iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <img src="https://aficfrio.com.br/wp-content/uploads/2022/05/Afic-Frio-300x68.png" alt="Afic Frio"
+                class="logo">
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Assistência Técnica Especializada em Eletrodomésticos</h1>
+            <p>Atendimento em Piracicaba, Limeira e Região com garantia de 1 ano em peças</p>
+            <div class="cta-group">
+                <a href="https://wa.me/5519974055311" class="btn-primary">
+                    <span>📱</span> WhatsApp
+                </a>
+                <a href="tel:1934328217" class="btn-secondary">
+                    Ligar Agora
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="benefits-content">
+            <h2>Por que escolher a Afic Frio?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">⚡</div>
+                    <h3>Atendimento Rápido</h3>
+                    <p>Respondemos rapidamente e agendamos o mais breve possível</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">🛠️</div>
+                    <h3>1 Ano de Garantia</h3>
+                    <p>Garantia de 1 ano em todas as peças trocadas</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">💳</div>
+                    <h3>Até 10x no Cartão</h3>
+                    <p>Parcelamento facilitado para sua comodidade</p>
+                </div>
+                <div class="benefit-card">
+                    <div class="benefit-icon">✅</div>
+                    <h3>Marcas Autorizadas</h3>
+                    <p>Assistência autorizada das principais marcas do mercado</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="brands">
+        <div class="brands-content">
+            <h2>Marcas que Atendemos</h2>
+            <div class="brands-images">
+                <div class="brand-section">
+                    <h3>Assistências Autorizadas</h3>
+                    <img src="https://aficfrio.com.br/wp-content/uploads/2022/05/Aut-768x89.jpg"
+                        alt="Marcas Autorizadas">
+                </div>
+                <div class="brand-section">
+                    <h3>Marcas Especializadas</h3>
+                    <img src="https://aficfrio.com.br/wp-content/uploads/2022/05/Esp-768x88.jpg"
+                        alt="Marcas Especializadas">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about">
+        <div class="about-content">
+            <h2>NASCIMENTO EMPRESA.</h2>
+            <p class="about-highlight">hoje temos mais de 40 mil clientes!</p>
+
+            <div class="about-text">
+                <p>
+                    Por volta de 15 de setembro de 1999, dei início a AFICFRIO, onde comecei na minha casa a conquistar
+                    um cliente de cada vez! Trabalhei por alguns anos em casa somente eu e minha esposa como secretária
+                    e ajudante em lavar as peças de máquinas de revisão que não era fácil tudo isso, após alguns anos
+                    trabalhando em casa alugamos um salão no jardim do lago, onde ficamos mais alguns anos. Nesse meio
+                    tempo o trabalho estava sendo bem reconhecido no mercado e tivemos que abrir firma, onde isso foi o
+                    pontapé do sucesso!
+                </p>
+                <p>
+                    Pois pelo trabalho bem feito em geral, veio a aparecer renomadas marcas no mercado como LG, MIDEA
+                    CARRIER, ELECTROLUX, TRAMONTINA, FISCHER MABE, GE, BRASTEMP, CONSUL, BOSCH, PRÁTICA KLIMAQUIP,
+                    ENGEHOOD. Desde então a cidade de Piracicaba nos abençoou e compramos nosso prédio próprio e no
+                    final de 2011, mudamos pra lá onde estamos desde então. Hoje atendemos mais de 25 cidades da região,
+                    temos mais de 40 mil clientes como dito acima.
+                </p>
+                <p>
+                    Somos autorizados de renomadas marcas do mercado, sendo LG, MIDEA CARRIER, TRAMONTINA, FISCHER MABE,
+                    GE, BRASTEMP, CONSUL, ELECTROLUX, SANSUNG, PANASONIC, demais outras, com veículos novos em campo,
+                    ferramentas de ponta do mercado, equipe uniformizada e treinada, onde tenho mais de 29 anos no ramo
+                    e mais de 150 cursos na área, e atendo com clareza nossos clientes.
+                </p>
+                <p class="about-highlight-red">
+                    CLIENTE É PATRÃO DO PATRÃO! Amo o que faço e faço com amor.
+                </p>
+            </div>
+
+            <div class="mission-vision-values">
+                <div class="mvv-card">
+                    <h3>Missão</h3>
+                    <p>
+                        Atender com excelência às demandas de nossos clientes a partir do desenvolvimento e oferta de
+                        produtos e serviços que contribuam para a melhoria da qualidade de vida das pessoas, gerando
+                        riqueza de forma sustentável.
+                    </p>
+                </div>
+
+                <div class="mvv-card">
+                    <h3>Visão</h3>
+                    <p>
+                        Ser empresa de referência, reconhecida como a melhor opção por clientes, colaboradores,
+                        comunidade e fornecedores, devido à qualidade de nossos produtos, serviços e relacionamento.
+                    </p>
+                </div>
+
+                <div class="mvv-card">
+                    <h3>Valores</h3>
+                    <ul class="values-list">
+                        <li>Integridade</li>
+                        <li>Comprometimento</li>
+                        <li>Valorização Humana</li>
+                        <li>Superação de Resultados</li>
+                        <li>Melhoria contínua</li>
+                        <li>Inovação e Sustentabilidade</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form & Map Section -->
+    <section class="contact-form-section">
+        <div class="contact-form-content">
+            <h2>Solicite um Orçamento</h2>
+            <div class="form-map-grid">
+                <div class="form-container">
+                    <h3>Envie sua mensagem</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="nome">Seu nome (obrigatório)</label>
+                            <input type="text" id="nome" name="nome" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Seu e-mail (obrigatório)</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="telefone">Seu telefone</label>
+                            <input type="tel" id="telefone" name="telefone">
+                        </div>
+                        <div class="form-group">
+                            <label for="assunto">Assunto</label>
+                            <input type="text" id="assunto" name="assunto">
+                        </div>
+                        <div class="form-group">
+                            <label for="mensagem">Sua mensagem</label>
+                            <textarea id="mensagem" name="mensagem"></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Enviar</button>
+                    </form>
+                </div>
+                <div class="map-container">
+                    <h3>Nossa Localização - Limeira</h3>
+                    <p>
+                        <strong>Rua José Pintarelli, 50</strong><br>
+                        Jardim Palmeiras<br>
+                        Limeira - SP, 13481-685
+                    </p>
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3678.5746548848944!2d-47.42044708890384!3d-22.566788334826043!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94c8807e00000001%3A0x1!2sRua%20Jos%C3%A9%20Pintarelli%2C%2050%20-%20Jardim%20Palmeiras%2C%20Limeira%20-%20SP%2C%2013481-685!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                        allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="contact-content">
+            <h2>Entre em Contato</h2>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>Piracicaba</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <strong>Telefone:</strong>
+                            <span>(19) 3432-8217</span>
+                        </div>
+                        <div class="contact-item">
+                            <strong>WhatsApp:</strong>
+                            <span>(19) 97405-5311</span>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Endereço:</strong>
+                            <span>Rua Moraes Barros, 1585<br>Bairro Alto - Piracicaba/SP</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-card">
+                    <h3>Limeira</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <strong>Telefone:</strong>
+                            <span>(19) 97404-7361</span>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Telefone:</strong>
+                            <span>(19) 3444-1047</span>
+                        </div>
+                        <div class="contact-item">
+                            <strong>Região:</strong>
+                            <span>Atendemos Limeira e região</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Afic Frio - Assistência Técnica Especializada</p>
+        <p>Piracicaba e Região | Limeira e Região</p>
+    </footer>
+
+    <!-- WhatsApp Float Button -->
+    <a href="https://wa.me/5519974055311" class="whatsapp-float" target="_blank">
+        💬
+    </a>
+</body>
+
+</html>
