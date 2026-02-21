@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minhas Anotações de Inglês</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>English Notes</h1>
+    <p>Minhas anotações de inglês organizadas por tópico</p>
+  </header>
+
+  <nav id="menu"></nav>
+
+  <main>
+    <div class="topics" id="topics"></div>
+  </main>
+
+  <footer>English Notes &copy; 2026</footer>
+
+  <script src="menu.js"></script>
+  <script>
+    // Gera os cards na home a partir da lista de tópicos do menu.js
+    const container = document.getElementById('topics');
+
+    const categoryLabels = {
+      present: 'Present',
+      past: 'Past',
+      future: 'Future'
+    };
+
+    topics.forEach(topic => {
+      const card = document.createElement('a');
+      card.href = topic.file;
+      card.className = 'topic-card';
+
+      const badge = topic.category
+        ? `<span class="badge ${topic.category}">${categoryLabels[topic.category] || topic.category}</span>`
+        : '';
+
+      card.innerHTML = `${badge}<h3>${topic.title}</h3><p>${topic.desc}</p>`;
+      container.appendChild(card);
+    });
+  </script>
+
+</body>
+</html>
