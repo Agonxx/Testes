@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Upper/Lower — Treino</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --card: #1a1a1a;
+    --border: #2a2a2a;
+    --accent: #c8f135;
+    --accent2: #f1c135;
+    --text: #f0f0f0;
+    --muted: #666;
+    --upper-a: #c8f135;
+    --upper-b: #35d4f1;
+    --lower-a: #f1c135;
+    --lower-b: #f16535;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 20px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-top {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+
+  .header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 2px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .header .subtitle {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .header .profile {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  .profile span {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* NAV TABS */
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 16px 20px;
+    position: sticky;
+    top: 77px;
+    z-index: 99;
+    background: var(--bg);
+  }
+
+  .tab {
+    padding: 10px 4px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--muted);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .tab.active[data-day="upper-a"] { border-color: var(--upper-a); color: var(--upper-a); background: #c8f13512; }
+  .tab.active[data-day="lower-a"] { border-color: var(--lower-a); color: var(--lower-a); background: #f1c13512; }
+  .tab.active[data-day="upper-b"] { border-color: var(--upper-b); color: var(--upper-b); background: #35d4f112; }
+  .tab.active[data-day="lower-b"] { border-color: var(--lower-b); color: var(--lower-b); background: #f1653512; }
+
+  /* CONTENT */
+  .content { display: none; padding: 0 16px; }
+  .content.active { display: block; }
+
+  /* SECTION */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    margin: 16px 4px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* EXERCISE CARD */
+  .exercise-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .exercise-header {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .ex-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--muted);
+    width: 24px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .ex-info { flex: 1; }
+
+  .ex-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .ex-detail {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+
+  .ex-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Superset badge */
+  .badge-ss {
+    background: #ffffff10;
+    color: #aaa;
+    border: 1px solid #333;
+    font-size: 11px;
+  }
+
+  .ex-toggle {
+    color: var(--muted);
+    font-size: 18px;
+    flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+
+  .exercise-card.open .ex-toggle { transform: rotate(180deg); }
+
+  .exercise-body {
+    display: none;
+    padding: 0 16px 16px;
+    border-top: 1px solid var(--border);
+  }
+
+  .exercise-card.open .exercise-body { display: block; }
+
+  /* SETS TABLE */
+  .sets-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+    font-size: 13px;
+  }
+
+  .sets-table th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 500;
+    padding: 4px 8px 8px 0;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .sets-table td {
+    padding: 8px 8px 8px 0;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .set-num { color: var(--muted); font-weight: 500; }
+
+  .reps-input, .weight-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    width: 60px;
+    padding: 6px 8px;
+    text-align: center;
+    outline: none;
+  }
+
+  .reps-input:focus, .weight-input:focus {
+    border-color: var(--accent);
+  }
+
+  .check-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .check-btn.done {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #000;
+  }
+
+  /* TIPS */
+  .tip-box {
+    background: #ffffff06;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #888;
+    line-height: 1.6;
+  }
+
+  .tip-box strong { color: var(--accent); font-weight: 600; }
+
+  /* SUPERSET CONNECTOR */
+  .superset-connector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 16px;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .superset-connector::before,
+  .superset-connector::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    border-style: dashed;
+  }
+
+  /* REST TIMER */
+  .timer-section {
+    padding: 16px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .timer-section.visible { display: flex; }
+
+  .timer-display {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    line-height: 1;
+    min-width: 80px;
+  }
+
+  .timer-display.warning { color: var(--lower-b); }
+
+  .timer-label {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
+  .timer-info { flex: 1; }
+
+  .timer-exercise {
+    font-size: 13px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .timer-progress {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 6px;
+    overflow: hidden;
+  }
+
+  .timer-progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width 1s linear, background 0.3s;
+  }
+
+  .timer-close {
+    background: var(--border);
+    border: none;
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* WEEK SCHEDULE */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    padding: 16px 16px 8px;
+  }
+
+  .day-cell {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 4px;
+    text-align: center;
+  }
+
+  .day-cell .day-name {
+    font-size: 9px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .day-cell .day-workout {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+
+  .day-cell.ua .day-workout { color: var(--upper-a); }
+  .day-cell.la .day-workout { color: var(--lower-a); }
+  .day-cell.ub .day-workout { color: var(--upper-b); }
+  .day-cell.lb .day-workout { color: var(--lower-b); }
+  .day-cell.rest .day-workout { color: var(--muted); }
+
+  /* CARDIO BLOCK */
+  .cardio-block {
+    margin: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .cardio-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--upper-b);
+    margin-bottom: 8px;
+  }
+
+  .cardio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+  }
+
+  .cardio-icon { font-size: 20px; }
+  .cardio-desc { flex: 1; color: var(--text); }
+  .cardio-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .cardio-dur { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: var(--upper-b); }
+
+  /* NOTES */
+  .notes-block {
+    margin: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .notes-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .note-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #888;
+    line-height: 1.5;
+  }
+
+  .note-dot { color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+
+  /* HISTORY */
+  .hist-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 12px;
+    background: #ffffff08;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 8px 12px;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s;
+  }
+
+  .hist-btn:hover { border-color: #444; color: var(--text); }
+
+  .hist-panel {
+    margin-top: 12px;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .hist-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .hist-session {
+    background: #ffffff05;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+
+  .hist-session.hist-latest {
+    border-color: #3a3a3a;
+    background: #ffffff09;
+  }
+
+  .hist-date {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .hist-latest .hist-date { color: var(--accent); }
+
+  .hist-sets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .hist-set {
+    background: #ffffff08;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #aaa;
+  }
+
+  .hist-set strong { color: var(--text); }
+
+  /* TAB DATE */
+  .tab-date {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 2px;
+    letter-spacing: 0;
+  }
+
+  /* COLOR tags */
+  [data-color="ua"] .ex-num { color: var(--upper-a); }
+  [data-color="la"] .ex-num { color: var(--lower-a); }
+  [data-color="ub"] .ex-num { color: var(--upper-b); }
+  [data-color="lb"] .ex-num { color: var(--lower-b); }
+
+  /* FADE IN */
+  .content.active .exercise-card {
+    animation: fadeUp 0.3s ease both;
+  }
+  .content.active .exercise-card:nth-child(1) { animation-delay: 0s; }
+  .content.active .exercise-card:nth-child(2) { animation-delay: 0.05s; }
+  .content.active .exercise-card:nth-child(3) { animation-delay: 0.1s; }
+  .content.active .exercise-card:nth-child(4) { animation-delay: 0.15s; }
+  .content.active .exercise-card:nth-child(5) { animation-delay: 0.2s; }
+  .content.active .exercise-card:nth-child(6) { animation-delay: 0.25s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .pb-timer { padding-bottom: 90px; }
+
+  /* HISTORY */
+  .history-btn {
+    width: 100%;
+    margin-top: 12px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 9px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+  }
+  .history-btn:hover { border-color: #444; color: #aaa; }
+
+  .history-panel {
+    display: none;
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .history-panel.open { display: block; }
+
+  .history-header {
+    background: #111;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .history-header span {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+  }
+  .history-header strong {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+
+  .history-session {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    background: #0d0d0d;
+  }
+  .history-session-date {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .history-row {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .history-set-chip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: #ccc;
+    white-space: nowrap;
+  }
+  .history-set-chip .chip-weight { color: var(--accent); font-weight: 600; }
+  .history-empty {
+    padding: 14px 12px;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .last-hint {
+    font-size: 10px;
+    color: #555;
+    margin-top: 2px;
+  }
+  .last-hint span { color: var(--accent); }
+
+  .finish-btn {
+    display: block;
+    width: calc(100% - 32px);
+    margin: 16px 16px 0;
+    padding: 14px;
+    background: var(--accent);
+    color: #000;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 2px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s;
+  }
+
+  /* HIST BUTTON */
+  .hist-btn {
+    width: 100%;
+    margin-top: 12px;
+    background: transparent;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 9px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .hist-btn:hover { border-color: #444; color: #aaa; }
+
+  /* HIST PANEL */
+  .hist-panel {
+    margin-top: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .hist-title {
+    background: #111;
+    padding: 7px 12px;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent);
+  }
+  .hist-session {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    background: #0d0d0d;
+  }
+  .hist-session.hist-latest { background: #0f120a; }
+  .hist-date {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .hist-sets { display: flex; gap: 6px; flex-wrap: wrap; }
+  .hist-set {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: #aaa;
+  }
+  .hist-set strong { color: var(--accent); }
+
+  /* TAB DATE */
+  .tab-date {
+    font-size: 8px;
+    color: #444;
+    font-family: 'DM Sans', sans-serif;
+    margin-top: 2px;
+    letter-spacing: 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>Upper / Lower</h1>
+    <span class="subtitle">4 dias · Hipertrofia</span>
+  </div>
+  <div class="profile">1,82m · 88kg · <span>11% GC</span> · Avançado</div>
+</div>
+
+<!-- SEMANA -->
+<div class="week-grid">
+  <div class="day-cell ua"><div class="day-name">Seg</div><div class="day-workout">UP·A</div></div>
+  <div class="day-cell la"><div class="day-name">Ter</div><div class="day-workout">LOW·A</div></div>
+  <div class="day-cell rest"><div class="day-name">Qua</div><div class="day-workout">—</div></div>
+  <div class="day-cell ub"><div class="day-name">Qui</div><div class="day-workout">UP·B</div></div>
+  <div class="day-cell lb"><div class="day-name">Sex</div><div class="day-workout">LOW·B</div></div>
+  <div class="day-cell rest"><div class="day-name">Sáb</div><div class="day-workout">—</div></div>
+  <div class="day-cell rest"><div class="day-name">Dom</div><div class="day-workout">—</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" data-day="upper-a">UP·A</div>
+  <div class="tab" data-day="lower-a">LOW·A</div>
+  <div class="tab" data-day="upper-b">UP·B</div>
+  <div class="tab" data-day="lower-b">LOW·B</div>
+</div>
+
+<!-- ==================== UPPER A ==================== -->
+<div class="content active" id="upper-a">
+  <div class="section-title" style="color: var(--upper-a)">Peito</div>
+
+  <!-- SS1A -->
+  <div class="exercise-card" data-color="ua" data-rest="180" data-restname="Supino Reto">
+    <div class="exercise-header">
+      <div class="ex-num">1</div>
+      <div class="ex-info">
+        <div class="ex-name">Supino Reto com Halteres</div>
+        <div class="ex-detail">4 × 4–6 reps · 3 min descanso</div>
+      </div>
+      <span class="badge-ss">SS1</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Amplitude completa — halteres descem além da linha do peito. Descida controlada (3s), empurre explosivo. Escápulas retraídas durante todo o movimento. <strong>Progressão:</strong> adicione 2kg quando bater 6 reps em todas as séries.</div>
+    </div>
+  </div>
+
+  <div class="superset-connector">superset com ↕</div>
+
+  <!-- SS1B -->
+  <div class="exercise-card" data-color="ua" data-rest="90" data-restname="Remada Baixa Polia">
+    <div class="exercise-header">
+      <div class="ex-num">2</div>
+      <div class="ex-info">
+        <div class="ex-name">Remada Baixa Polia</div>
+        <div class="ex-detail">4 × 6–8 reps · 90s descanso</div>
+      </div>
+      <span class="badge-ss">SS1</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Tronco ereto, puxe o cotovelo para o quadril. A polia mantém tensão constante — explore o alongamento no início do movimento. Descida controlada em 2s.</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--upper-a)">Peito / Costas</div>
+
+  <!-- SS2A -->
+  <div class="exercise-card" data-color="ua" data-rest="90" data-restname="Supino Inclinado">
+    <div class="exercise-header">
+      <div class="ex-num">3</div>
+      <div class="ex-info">
+        <div class="ex-name">Supino Inclinado com Halteres</div>
+        <div class="ex-detail">3 × 8–10 reps · 90s descanso</div>
+      </div>
+      <span class="badge-ss">SS2</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Banco a 30°. Halteres descem até a linha do peito com rotação natural do pulso. Esprema no topo.</div>
+    </div>
+  </div>
+
+  <div class="superset-connector">superset com ↕</div>
+
+  <!-- SS2B -->
+  <div class="exercise-card" data-color="ua" data-rest="90" data-restname="Puxada Pronada">
+    <div class="exercise-header">
+      <div class="ex-num">4</div>
+      <div class="ex-info">
+        <div class="ex-name">Puxada Pronada (máquina)</div>
+        <div class="ex-detail">3 × 6–10 reps · 90s descanso</div>
+      </div>
+      <span class="badge-ss">SS2</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="8"></td><td><input class="weight-input" type="number" placeholder="PC"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="8"></td><td><input class="weight-input" type="number" placeholder="PC"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="8"></td><td><input class="weight-input" type="number" placeholder="PC"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Pegada pronada larga. Inicie com ativação do latíssimo antes de puxar. Puxe o cotovelo para o chão. Descida em 3s com controle total. Progrida na carga semanalmente.</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--upper-a)">Ombros / Braços</div>
+
+  <div class="exercise-card" data-color="ua" data-rest="90" data-restname="Desenvolvimento">
+    <div class="exercise-header">
+      <div class="ex-num">5</div>
+      <div class="ex-info">
+        <div class="ex-name">Desenvolvimento com Halteres</div>
+        <div class="ex-detail">3 × 8–10 reps · 90s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="ua" data-rest="60" data-restname="Tríceps Testa">
+    <div class="exercise-header">
+      <div class="ex-num">6</div>
+      <div class="ex-info">
+        <div class="ex-name">Tríceps Testa com Barra EZ</div>
+        <div class="ex-detail">3 × 10–12 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="ua" data-rest="60" data-restname="Rosca Direta">
+    <div class="exercise-header">
+      <div class="ex-num">7</div>
+      <div class="ex-info">
+        <div class="ex-name">Rosca Direta com Barra</div>
+        <div class="ex-detail">3 × 10–12 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cardio-block" id="cardio-upper-a">
+    <div class="cardio-title">🚴 Cardio Pós-Treino</div>
+    <div class="cardio-item">
+      <div class="cardio-icon">🚲</div>
+      <div class="cardio-desc">
+        Bicicleta ergométrica — Zona 2
+        <div class="cardio-detail">Cadência leve, sem perder o fôlego (FC ~120–135 bpm)</div>
+      </div>
+      <div class="cardio-dur">25'</div>
+      <button class="check-btn" id="cardio-check-upper-a" onclick="toggleCardioCheck(this, 'cardio-check-upper-a')" style="margin-left:10px;flex-shrink:0">✓</button>
+    </div>
+  </div>
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- ==================== LOWER A ==================== -->
+<div class="content" id="lower-a">
+  <div class="section-title" style="color: var(--lower-a)">Quadríceps</div>
+
+  <div class="exercise-card" data-color="la" data-rest="240" data-restname="Agachamento">
+    <div class="exercise-header">
+      <div class="ex-num">1</div>
+      <div class="ex-info">
+        <div class="ex-name">Agachamento Livre</div>
+        <div class="ex-detail">4 × 4–6 reps · 4 min descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Profundidade abaixo do paralelo. Joelhos alinhados com o pé. Barra na posição alta ou baixa conforme preferência. <strong>Foco:</strong> é seu exercício principal — dê o máximo aqui.</div>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="la" data-rest="120" data-restname="Hack Squat">
+    <div class="exercise-header">
+      <div class="ex-num">2</div>
+      <div class="ex-info">
+        <div class="ex-name">Hack Squat (máquina)</div>
+        <div class="ex-detail">3 × 10–12 reps · 2 min descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Dica:</strong> O joelho vai mais à frente que no agachamento livre — isso é esperado e maximiza a ativação do quad distal (vasto lateral e medial). Profundidade abaixo do paralelo. Não trave os joelhos no topo.</div>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="la" data-rest="90" data-restname="Cadeira Extensora">
+    <div class="exercise-header">
+      <div class="ex-num">3</div>
+      <div class="ex-info">
+        <div class="ex-name">Cadeira Extensora</div>
+        <div class="ex-detail">3 × 12–15 reps · 90s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Técnica avançada:</strong> Na última série, faça drop-set — reduza 30% da carga e continue até a falha.</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--lower-a)">Posterior / Glúteo</div>
+
+  <div class="exercise-card" data-color="la" data-rest="120" data-restname="Stiff">
+    <div class="exercise-header">
+      <div class="ex-num">4</div>
+      <div class="ex-info">
+        <div class="ex-name">Stiff com Barra</div>
+        <div class="ex-detail">3 × 8–10 reps · 2 min descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Joelhos levemente flexionados, quadril empurra para trás, barra desce pela perna. Sinta o alongamento no isquiotibial antes de voltar.</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--lower-a)">Panturrilha</div>
+
+  <div class="exercise-card" data-color="la" data-rest="60" data-restname="Panturrilha em Pé">
+    <div class="exercise-header">
+      <div class="ex-num">5</div>
+      <div class="ex-info">
+        <div class="ex-name">Panturrilha em Pé (máquina)</div>
+        <div class="ex-detail">4 × 12–15 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Dica:</strong> Amplitude completa — calcanhar abaixo do nível do degrau. Pausa de 1s no topo contraído. Panturrilha precisa de volume e amplitude para crescer.</div>
+    </div>
+  </div>
+
+  <div class="cardio-block" id="cardio-lower-a">
+    <div class="cardio-title">🚴 Cardio Pós-Treino</div>
+    <div class="cardio-item">
+      <div class="cardio-icon">🚲</div>
+      <div class="cardio-desc">
+        Bicicleta ergométrica — Zona 2
+        <div class="cardio-detail">Cadência leve, sem perder o fôlego (FC ~120–135 bpm)</div>
+      </div>
+      <div class="cardio-dur">25'</div>
+      <button class="check-btn" id="cardio-check-lower-a" onclick="toggleCardioCheck(this, 'cardio-check-lower-a')" style="margin-left:10px;flex-shrink:0">✓</button>
+    </div>
+  </div>
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- ==================== UPPER B ==================== -->
+<div class="content" id="upper-b">
+  <div class="section-title" style="color: var(--upper-b)">Peito</div>
+
+  <div class="exercise-card" data-color="ub" data-rest="120" data-restname="Supino c/ Halteres">
+    <div class="exercise-header">
+      <div class="ex-num">1</div>
+      <div class="ex-info">
+        <div class="ex-name">Supino Inclinado com Halteres</div>
+        <div class="ex-detail">4 × 6–8 reps · 2 min descanso</div>
+      </div>
+      <span class="badge-ss">SS1</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="7"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="superset-connector">superset com ↕</div>
+
+  <div class="exercise-card" data-color="ub" data-rest="90" data-restname="Remada Unilateral">
+    <div class="exercise-header">
+      <div class="ex-num">2</div>
+      <div class="ex-info">
+        <div class="ex-name">Remada Unilateral com Haltere</div>
+        <div class="ex-detail">4 × 8–10 reps · 90s descanso</div>
+      </div>
+      <span class="badge-ss">SS1</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--upper-b)">Peito / Costas</div>
+
+  <div class="exercise-card" data-color="ub" data-rest="90" data-restname="Crucifixo">
+    <div class="exercise-header">
+      <div class="ex-num">3</div>
+      <div class="ex-info">
+        <div class="ex-name">Crucifixo na Polia</div>
+        <div class="ex-detail">3 × 10–12 reps · 90s descanso</div>
+      </div>
+      <span class="badge-ss">SS2</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="superset-connector">superset com ↕</div>
+
+  <div class="exercise-card" data-color="ub" data-rest="90" data-restname="Pullover">
+    <div class="exercise-header">
+      <div class="ex-num">4</div>
+      <div class="ex-info">
+        <div class="ex-name">Pullover com Halter</div>
+        <div class="ex-detail">3 × 10–12 reps · 90s descanso</div>
+      </div>
+      <span class="badge-ss">SS2</span>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Deitado transversal no banco, halter sobre o peito. Desça em arco controlado para trás da cabeça. Ótimo para serrilhado e expansão do latíssimo.</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--upper-b)">Ombros / Braços</div>
+
+  <div class="exercise-card" data-color="ub" data-rest="90" data-restname="Elevação Lateral">
+    <div class="exercise-header">
+      <div class="ex-num">5</div>
+      <div class="ex-info">
+        <div class="ex-name">Elevação Lateral com Halteres</div>
+        <div class="ex-detail">4 × 12–15 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Técnica avançada:</strong> Rest-pause na última série — pare 15s e continue até a falha mais 2x. Deltóide lateral é resistente, precisa de volume alto.</div>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="ub" data-rest="60" data-restname="Tríceps Polia">
+    <div class="exercise-header">
+      <div class="ex-num">6</div>
+      <div class="ex-info">
+        <div class="ex-name">Tríceps Polia (corda)</div>
+        <div class="ex-detail">3 × 12–15 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="ub" data-rest="60" data-restname="Rosca Martelo">
+    <div class="exercise-header">
+      <div class="ex-num">7</div>
+      <div class="ex-info">
+        <div class="ex-name">Rosca Martelo</div>
+        <div class="ex-detail">3 × 12–15 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="cardio-block" id="cardio-upper-b">
+    <div class="cardio-title">🚴 Cardio Pós-Treino</div>
+    <div class="cardio-item">
+      <div class="cardio-icon">🚲</div>
+      <div class="cardio-desc">
+        Bicicleta ergométrica — Zona 2
+        <div class="cardio-detail">Cadência leve, sem perder o fôlego (FC ~120–135 bpm)</div>
+      </div>
+      <div class="cardio-dur">25'</div>
+      <button class="check-btn" id="cardio-check-upper-b" onclick="toggleCardioCheck(this, 'cardio-check-upper-b')" style="margin-left:10px;flex-shrink:0">✓</button>
+    </div>
+  </div>
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- ==================== LOWER B ==================== -->
+<div class="content" id="lower-b">
+  <div class="section-title" style="color: var(--lower-b)">Posterior / Glúteo</div>
+
+  <div class="exercise-card" data-color="lb" data-rest="240" data-restname="Terra">
+    <div class="exercise-header">
+      <div class="ex-num">1</div>
+      <div class="ex-info">
+        <div class="ex-name">Levantamento Terra</div>
+        <div class="ex-detail">4 × 4–6 reps · 4 min descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="5"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Setup: quadril baixo, peito alto, barra sobre o mediopé. Empurre o chão, não puxe. Cintura escapular ativa. É o rei dos exercícios — trate como tal.</div>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="lb" data-rest="120" data-restname="Hip Thrust">
+    <div class="exercise-header">
+      <div class="ex-num">2</div>
+      <div class="ex-info">
+        <div class="ex-name">Elevação Pélvica com Barra</div>
+        <div class="ex-detail">4 × 8–12 reps · 2 min descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="10"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="10"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="10"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="10"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Execução:</strong> Ombros apoiados no banco. Empurre pelos calcanhares. Pausa de 2s contraído no topo. Evite hiperextender a lombar.</div>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="lb" data-rest="120" data-restname="Agachamento Búlgaro">
+    <div class="exercise-header">
+      <div class="ex-num">3</div>
+      <div class="ex-info">
+        <div class="ex-name">Agachamento Búlgaro</div>
+        <div class="ex-detail">3 × 8–10 reps (cada) · 2 min descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="9"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Dica:</strong> Faça um lado por vez antes de trocar. Pé da frente suficientemente à frente para o joelho não ultrapassar o pé no fundo da descida.</div>
+    </div>
+  </div>
+
+  <div class="exercise-card" data-color="lb" data-rest="90" data-restname="Cadeira Flexora">
+    <div class="exercise-header">
+      <div class="ex-num">4</div>
+      <div class="ex-info">
+        <div class="ex-name">Cadeira Flexora</div>
+        <div class="ex-detail">3 × 10–12 reps · 90s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="11"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="color: var(--lower-b)">Panturrilha</div>
+
+  <div class="exercise-card" data-color="lb" data-rest="60" data-restname="Panturrilha Sentado">
+    <div class="exercise-header">
+      <div class="ex-num">5</div>
+      <div class="ex-info">
+        <div class="ex-name">Panturrilha Sentado (máquina)</div>
+        <div class="ex-detail">4 × 12–15 reps · 60s descanso</div>
+      </div>
+      <div class="ex-toggle">▾</div>
+    </div>
+    <div class="exercise-body">
+      <table class="sets-table">
+        <tr><th>Série</th><th>Reps</th><th>Carga (kg)</th><th></th></tr>
+        <tr><td class="set-num">1</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">2</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">3</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+        <tr><td class="set-num">4</td><td><input class="reps-input" type="number" placeholder="13"></td><td><input class="weight-input" type="number" placeholder="—"></td><td><button class="check-btn" onclick="toggleCheck(this)">✓</button></td></tr>
+      </table>
+      <div class="tip-box"><strong>Diferença:</strong> Sentado isola mais o sóleo. Alternando com a panturrilha em pé (Lower A) você treina os dois feixes com frequência ideal.</div>
+    </div>
+  </div>
+
+  <div class="cardio-block" id="cardio-lower-b">
+    <div class="cardio-title">🚴 Cardio Pós-Treino</div>
+    <div class="cardio-item">
+      <div class="cardio-icon">🚲</div>
+      <div class="cardio-desc">
+        Bicicleta ergométrica — Zona 2
+        <div class="cardio-detail">Cadência leve, sem perder o fôlego (FC ~120–135 bpm)</div>
+      </div>
+      <div class="cardio-dur">25'</div>
+      <button class="check-btn" id="cardio-check-lower-b" onclick="toggleCardioCheck(this, 'cardio-check-lower-b')" style="margin-left:10px;flex-shrink:0">✓</button>
+    </div>
+  </div>
+
+  <!-- NOTAS -->
+  <div class="notes-block">
+    <div class="notes-title">📋 Notas do Programa</div>
+    <div class="note-item"><span class="note-dot">▸</span>Progressão de carga toda semana. Se bateu o teto de reps em todas as séries → adiciona peso na próxima semana.</div>
+    <div class="note-item"><span class="note-dot">▸</span>Deload a cada 6–8 semanas: reduza volume em 40% (mesma carga, menos séries).</div>
+    <div class="note-item"><span class="note-dot">▸</span>Cardio Zona 2 nos dias de folga (Qua/Sáb): 30–40 min. Maximiza déficit sem comprometer recuperação.</div>
+    <div class="note-item"><span class="note-dot">▸</span>Gordura abdominal com BF baixo = foco em sono, gestão de cortisol e dieta. Cardio extra não resolve.</div>
+  </div>
+
+  <div style="height: 16px;"></div>
+</div>
+
+<!-- FINISH BUTTON -->
+<button class="finish-btn" id="finishBtn" onclick="finishWorkout()">✓ Finalizar Treino</button>
+
+<!-- TIMER -->
+<div class="timer-section" id="timerBar">
+  <div>
+    <div class="timer-label">Descanso</div>
+    <div class="timer-display" id="timerDisplay">0:00</div>
+  </div>
+  <div class="timer-info">
+    <div class="timer-exercise" id="timerExercise">—</div>
+    <div class="timer-progress"><div class="timer-progress-bar" id="timerBar2" style="width:100%"></div></div>
+  </div>
+  <button class="timer-close" onclick="stopTimer()">✕</button>
+</div>
+
+<script>
+  // ─── UTILS ───────────────────────────────────────────────────────────────
+  const DB_KEY = 'ul_treino_v2';
+
+  function loadDB() {
+    try { return JSON.parse(localStorage.getItem(DB_KEY)) || {}; } catch { return {}; }
+  }
+
+  function saveDB(db) {
+    localStorage.setItem(DB_KEY, JSON.stringify(db));
+  }
+
+  function todayStr() {
+    return new Date().toLocaleDateString('pt-BR');
+  }
+
+  // exerciseId = restname do card (único por exercício)
+  function getExHistory(exId) {
+    const db = loadDB();
+    return db[exId] || [];
+  }
+
+  // Salva uma sessão completa de um exercício (array de {serie, reps, carga})
+  function saveExSession(exId, sets) {
+    const db = loadDB();
+    const history = db[exId] || [];
+    // Guarda as últimas 4 sessões
+    history.unshift({ date: todayStr(), sets });
+    if (history.length > 4) history.pop();
+    db[exId] = history;
+    // Registra data do treino no dia atual
+    const dayId = document.querySelector('.tab.active').dataset.day;
+    db['__lastDay_' + dayId] = todayStr();
+    saveDB(db);
+  }
+
+  // ─── CARREGAR ÚLTIMA SESSÃO NOS INPUTS ──────────────────────────────────
+  function loadLastSession(card) {
+    const exId = card.dataset.restname;
+    const history = getExHistory(exId);
+    if (!history.length) return;
+    const last = history[0];
+    const rows = card.querySelectorAll('.sets-table tr:not(:first-child)');
+    rows.forEach((row, i) => {
+      const s = last.sets[i];
+      if (!s) return;
+      const repsInput = row.querySelector('.reps-input');
+      const weightInput = row.querySelector('.weight-input');
+      if (repsInput && s.reps) repsInput.placeholder = s.reps;
+      if (weightInput && s.carga) weightInput.placeholder = s.carga + 'kg';
+    });
+  }
+
+  // ─── MOSTRAR HISTÓRICO ───────────────────────────────────────────────────
+  function renderHistory(exId) {
+    const history = getExHistory(exId);
+    if (!history.length) return '<p style="color:var(--muted);font-size:13px;padding:8px 0">Nenhum registro ainda. Complete séries para registrar.</p>';
+
+    return history.map((session, si) => {
+      const setsHtml = session.sets.map(s =>
+        `<span class="hist-set">S${s.serie}: <strong>${s.reps}r</strong> × <strong>${s.carga || '—'}kg</strong></span>`
+      ).join('');
+      return `
+        <div class="hist-session ${si === 0 ? 'hist-latest' : ''}">
+          <div class="hist-date">${si === 0 ? '🟢 ' : ''}${session.date}</div>
+          <div class="hist-sets">${setsHtml}</div>
+        </div>`;
+    }).join('');
+  }
+
+  function toggleHistory(btn) {
+    const card = btn.closest('.exercise-card');
+    const exId = card.dataset.restname;
+    let panel = card.querySelector('.hist-panel');
+    if (panel) { panel.remove(); btn.textContent = '📊 Histórico'; return; }
+    panel = document.createElement('div');
+    panel.className = 'hist-panel';
+    panel.innerHTML = `<div class="hist-title">Últimas sessões</div>${renderHistory(exId)}`;
+    card.querySelector('.exercise-body').appendChild(panel);
+    btn.textContent = '✕ Fechar';
+  }
+
+  // ─── FINISH WORKOUT ───────────────────────────────────────────────────────
+  function finishWorkout() {
+    const activeDay = document.querySelector('.content.active');
+    if (!activeDay) return;
+    const dayId = document.querySelector('.tab.active').dataset.day;
+
+    activeDay.querySelectorAll('.exercise-card').forEach(card => {
+      const exId = card.dataset.restname;
+      const sets = collectSets(card);
+      if (sets.length > 0) saveExSession(exId, sets);
+    });
+
+    // save last trained date
+    const db = loadDB();
+    db['__lastDay_' + dayId] = todayStr();
+    saveDB(db);
+
+    // update tab date label
+    const tab = document.querySelector('.tab[data-day="' + dayId + '"]');
+    let small = tab.querySelector('.tab-date');
+    if (!small) { small = document.createElement('div'); small.className = 'tab-date'; tab.appendChild(small); }
+    small.textContent = todayStr();
+
+    // feedback
+    const btn = document.getElementById('finishBtn');
+    btn.textContent = '✓ Treino salvo!';
+    btn.style.background = '#4ade80';
+    setTimeout(() => {
+      btn.textContent = '✓ Finalizar Treino';
+      btn.style.background = 'var(--accent)';
+    }, 2500);
+  }
+
+  // ─── INICIALIZAR CARDS ───────────────────────────────────────────────────
+  function initCards() {
+    document.querySelectorAll('.exercise-card').forEach(card => {
+      const body = card.querySelector('.exercise-body');
+      if (!body) return;
+
+      // Botão de histórico
+      const histBtn = document.createElement('button');
+      histBtn.className = 'hist-btn';
+      histBtn.textContent = '📊 Histórico de progressão';
+      histBtn.onclick = () => toggleHistory(histBtn);
+      body.appendChild(histBtn);
+
+      // Carregar placeholders da última sessão
+      loadLastSession(card);
+
+      // Mostrar última carga no header do card
+      const exId = card.dataset.restname;
+      const history = getExHistory(exId);
+      if (history.length > 0) {
+        const last = history[0];
+        const maxCarga = Math.max(...last.sets.map(s => parseFloat(s.carga) || 0));
+        const info = card.querySelector('.ex-detail');
+        if (info && maxCarga > 0) {
+          const hint = document.createElement('div');
+          hint.style.cssText = 'font-size:10px;color:#555;margin-top:2px;';
+          hint.innerHTML = 'Último treino: <span style="color:var(--accent);font-weight:600">' + maxCarga + 'kg</span> · ' + last.date;
+          info.parentElement.appendChild(hint);
+        }
+      }
+    });
+
+    // Atualizar data nas tabs
+    const db = loadDB();
+    document.querySelectorAll('.tab').forEach(tab => {
+      const dayId = tab.dataset.day;
+      const last = db['__lastDay_' + dayId];
+      if (last) {
+        const small = document.createElement('div');
+        small.className = 'tab-date';
+        small.textContent = last;
+        tab.appendChild(small);
+      }
+    });
+  }
+
+  // ─── SALVAR SÉRIE AO CHECAR ──────────────────────────────────────────────
+  // Guarda sets marcados temporariamente e salva quando o treino progride
+  const sessionBuffer = {}; // { exId: [sets] }
+
+  function collectSets(card) {
+    const exId = card.dataset.restname;
+    const rows = card.querySelectorAll('.sets-table tr:not(:first-child)');
+    const sets = [];
+    rows.forEach((row, i) => {
+      const repsInput = row.querySelector('.reps-input');
+      const weightInput = row.querySelector('.weight-input');
+      const checked = row.querySelector('.check-btn.done');
+      if (checked) {
+        sets.push({
+          serie: i + 1,
+          reps: repsInput?.value || repsInput?.placeholder || '—',
+          carga: weightInput?.value || weightInput?.placeholder?.replace('kg','') || '—'
+        });
+      }
+    });
+    return sets;
+  }
+
+  // ─── TABS ────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.day).classList.add('active');
+    });
+  });
+
+  // ─── EXPAND/COLLAPSE ─────────────────────────────────────────────────────
+  document.querySelectorAll('.exercise-header').forEach(header => {
+    header.addEventListener('click', () => {
+      header.parentElement.classList.toggle('open');
+    });
+  });
+
+  // ─── TIMER ───────────────────────────────────────────────────────────────
+  let timerInterval = null;
+  let timerRemaining = 0;
+  let timerTotal = 0;
+
+  function toggleCheck(btn) {
+    btn.classList.toggle('done');
+    const card = btn.closest('.exercise-card');
+    const exId = card.dataset.restname;
+
+    if (btn.classList.contains('done')) {
+      const rest = parseInt(card.dataset.rest);
+      const name = card.dataset.restname;
+      if (rest) startTimer(rest, name);
+    }
+  }
+
+  function startTimer(seconds, name) {
+    if (timerInterval) clearInterval(timerInterval);
+    timerRemaining = seconds;
+    timerTotal = seconds;
+    document.getElementById('timerExercise').textContent = 'Próx: ' + name;
+    document.getElementById('timerBar').classList.add('visible');
+    document.body.classList.add('pb-timer');
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+      timerRemaining--;
+      if (timerRemaining <= 0) {
+        clearInterval(timerInterval);
+        document.getElementById('timerDisplay').textContent = 'VAI!';
+        document.getElementById('timerBar2').style.width = '100%';
+        document.getElementById('timerBar2').style.background = 'var(--accent)';
+        setTimeout(stopTimer, 1500);
+        return;
+      }
+      updateTimerDisplay();
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timerRemaining / 60);
+    const s = timerRemaining % 60;
+    const display = document.getElementById('timerDisplay');
+    display.textContent = m + ':' + String(s).padStart(2, '0');
+    display.className = 'timer-display' + (timerRemaining <= 10 ? ' warning' : '');
+    const pct = (timerRemaining / timerTotal) * 100;
+    const bar = document.getElementById('timerBar2');
+    bar.style.width = pct + '%';
+    bar.style.background = timerRemaining <= 10 ? 'var(--lower-b)' : 'var(--accent)';
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    document.getElementById('timerBar').classList.remove('visible');
+    document.body.classList.remove('pb-timer');
+  }
+
+  // ─── CARDIO CHECK ─────────────────────────────────────────────────────────
+  function toggleCardioCheck(btn, id) {
+    btn.classList.toggle('done');
+    const db = loadDB();
+    db['cardio_' + id] = btn.classList.contains('done');
+    saveDB(db);
+  }
+
+  function loadCardioChecks() {
+    const db = loadDB();
+    document.querySelectorAll('[id^="cardio-check-"]').forEach(btn => {
+      if (db['cardio_' + btn.id]) btn.classList.add('done');
+    });
+  }
+
+  // ─── INIT ─────────────────────────────────────────────────────────────────
+  initCards();
+  loadCardioChecks();
+</script>
+</body>
+</html>
