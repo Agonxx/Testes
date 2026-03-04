@@ -12,6 +12,7 @@
       background: #0f0f0f;
       display: flex;
       justify-content: center;
+      font-size: 106%;
     }
 
     .card {
@@ -24,28 +25,28 @@
 
     /* Header */
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      text-align: center;
       margin-bottom: 14px;
       padding-bottom: 12px;
       border-bottom: 1px solid #2a2a2a;
     }
 
-    .header-left .title {
-      font-size: 1rem;
+    .header .title {
+      font-size: 1.05rem;
       font-weight: 700;
       color: #fff;
       line-height: 1.2;
+      margin-bottom: 3px;
     }
 
-    .header-left .period {
-      font-size: 0.75rem;
+    .header .period {
+      font-size: 0.78rem;
       color: #777;
-      margin-top: 2px;
+      margin-bottom: 6px;
     }
 
     .header .months {
+      display: inline-block;
       background: #27ae60;
       color: #fff;
       font-size: 0.68rem;
@@ -53,7 +54,6 @@
       padding: 4px 10px;
       border-radius: 20px;
       letter-spacing: 0.04em;
-      white-space: nowrap;
     }
 
     /* Section title */
@@ -138,42 +138,15 @@
     /* Nutri footer */
     .nutri-bar {
       margin-top: 16px;
-      background: #1c1c1c;
-      border-radius: 10px;
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      padding-top: 14px;
+      border-top: 1px solid #2a2a2a;
+      text-align: center;
     }
 
-    .nutri-bar .nutri-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #27ae60, #2ecc71);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
-    .nutri-bar .nutri-info .nutri-name {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .nutri-bar .nutri-info .nutri-handle {
-      font-size: 0.72rem;
-      color: #27ae60;
-      margin-top: 1px;
-    }
-
-    .nutri-bar .nutri-info .nutri-crn {
-      font-size: 0.62rem;
-      color: #444;
-      margin-top: 1px;
+    .nutri-bar .nutri-name {
+      font-size: 0.8rem;
+      color: #666;
+      letter-spacing: 0.04em;
     }
   </style>
 </head>
@@ -181,10 +154,8 @@
   <div class="card">
 
     <div class="header">
-      <div class="header-left">
-        <div class="title">Evolução Corporal</div>
-        <div class="period">Junho 2025 &rarr; Março 2026</div>
-      </div>
+      <div class="title">Evolução Corporal</div>
+      <div class="period">Junho 2025 &rarr; Março 2026</div>
       <div class="months">9 meses</div>
     </div>
 
@@ -253,14 +224,8 @@
       </div>
     </div>
 
-    <!-- Nutri destaque -->
     <div class="nutri-bar">
-      <div class="nutri-icon">🥗</div>
-      <div class="nutri-info">
-        <div class="nutri-name">Vanessa Moraes</div>
-        <div class="nutri-handle">@nutri_vanessamoraes</div>
-        <div class="nutri-crn">Nutricionista · CRN 62154</div>
-      </div>
+      <div class="nutri-name">Nutricionista Vanessa Moraes</div>
     </div>
 
   </div>
