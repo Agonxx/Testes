@@ -407,10 +407,8 @@ input[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; }
              placeholder="Nome ou telefone..." oninput="filtrarClientes()">
     </div>
     <div class="sort-row" id="sort-row">
-      <button class="sort-chip active" data-ord="divida-desc" onclick="setOrdem('divida-desc')">Maior divida</button>
-      <button class="sort-chip"        data-ord="az"          onclick="setOrdem('az')">A → Z</button>
-      <button class="sort-chip"        data-ord="za"          onclick="setOrdem('za')">Z → A</button>
-      <button class="sort-chip"        data-ord="divida-asc"  onclick="setOrdem('divida-asc')">Menor divida</button>
+      <button class="sort-chip active" id="btn-divida" onclick="toggleOrdem('divida')">Dívida <span id="arrow-divida">↓</span></button>
+      <button class="sort-chip"        id="btn-az"     onclick="toggleOrdem('az')">A–Z <span id="arrow-az">↑</span></button>
     </div>
     <div id="lista-clientes"></div>
   </div>
@@ -623,11 +621,18 @@ function classBal(saldo) {
 // ────────────────────────────────────────────────
 // Lista de clientes
 // ────────────────────────────────────────────────
-function setOrdem(ord) {
-  ordemAtual = ord;
-  document.querySelectorAll('.sort-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.ord === ord);
-  });
+function toggleOrdem(tipo) {
+  if (tipo === 'divida') {
+    ordemAtual = ordemAtual === 'divida-desc' ? 'divida-asc' : 'divida-desc';
+    document.getElementById('arrow-divida').textContent = ordemAtual === 'divida-desc' ? '↓' : '↑';
+    document.getElementById('btn-divida').classList.add('active');
+    document.getElementById('btn-az').classList.remove('active');
+  } else {
+    ordemAtual = ordemAtual === 'az' ? 'za' : 'az';
+    document.getElementById('arrow-az').textContent = ordemAtual === 'az' ? '↑' : '↓';
+    document.getElementById('btn-az').classList.add('active');
+    document.getElementById('btn-divida').classList.remove('active');
+  }
   filtrarClientes();
 }
 
