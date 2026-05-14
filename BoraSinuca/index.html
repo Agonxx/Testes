@@ -214,6 +214,12 @@ input:focus, select:focus { border-color: #52b788; }
   </div>
   <div id="ranking-individual"></div>
   <div id="ranking-duplas" style="display:none;"></div>
+
+  <div class="card" style="margin-top:8px;">
+    <h2>Exportar Dados</h2>
+    <p class="hint">Exporta todos os jogadores e partidas para um arquivo JSON.</p>
+    <button class="btn btn-secondary" onclick="exportJSON()">⬇ Exportar JSON</button>
+  </div>
 </div>
 
 <script>
@@ -492,6 +498,31 @@ function renderRanking() {
           <div class="rank-wins">${p.wins}</div>
         </li>`).join('')}</ul>`
     : '<div class="empty"><span class="empty-icon">🏆</span>Registre partidas para ver o ranking.</div>';
+}
+
+// ── Export ───────────────────────────────────────────────────────
+function exportJSON() {
+  const players = load(KEYS.players);
+  const matches = load(KEYS.matches);
+  const data = {
+    exportedAt: new Date().toISOString(),
+    players,
+    matches: matches.map(m => ({
+      ...m,
+      team1Names: m.team1.map(id => players.find(p => p.id === id)?.name || '?'),
+      team2Names: m.team2.map(id => players.find(p => p.id === id)?.name || '?'),
+      winnerTeam: m.winner === 1
+        ? m.team1.map(id => players.find(p => p.id === id)?.name || '?')
+        : m.team2.map(id => players.find(p => p.id === id)?.name || '?')
+    }))
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `borasinuca_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 // ── Init ─────────────────────────────────────────────────────────
