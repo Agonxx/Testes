@@ -97,6 +97,11 @@ input:focus, select:focus { border-color: #52b788; }
 .rank-stats { color: #aaa; font-size: 0.75rem; margin-top: 2px; }
 .rank-wins { font-size: 1.4rem; font-weight: 700; color: #52b788; flex-shrink: 0; }
 
+/* Match type segmented control */
+.match-type { display: flex; gap: 8px; margin-bottom: 14px; }
+.match-type button { flex: 1; padding: 10px 4px; border-radius: 8px; border: 2px solid #2d3561; background: none; color: #aaa; font-size: 0.88rem; font-weight: 600; cursor: pointer; }
+.match-type button.active { border-color: #52b788; color: #52b788; background: #1e4d3a; }
+
 /* Misc */
 .alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 0.88rem; }
 .alert-error { background: #3d1515; border: 1px solid #e63946; color: #ff6b6b; }
@@ -165,27 +170,32 @@ input:focus, select:focus { border-color: #52b788; }
 <div id="tab-partidas" class="tab">
   <div class="card">
     <h2>Registrar Partida</h2>
+    <div class="match-type">
+      <button id="mt-1v1" onclick="setMatchType('1v1')">1 × 1</button>
+      <button id="mt-2v1" onclick="setMatchType('2v1')">2 × 1</button>
+      <button id="mt-2v2" class="active" onclick="setMatchType('2v2')">2 × 2</button>
+    </div>
     <div class="teams-grid">
       <div class="team-block">
-        <h3>🟢 Dupla 1</h3>
+        <h3 id="label-t1">🟢 Dupla 1</h3>
         <select id="t1p1"><option value="">Jogador 1...</option></select>
-        <select id="t1p2"><option value="">Jogador 2...</option></select>
+        <div id="t1p2-wrap"><select id="t1p2"><option value="">Jogador 2...</option></select></div>
       </div>
       <div class="team-block">
-        <h3>🔵 Dupla 2</h3>
+        <h3 id="label-t2">🔵 Dupla 2</h3>
         <select id="t2p1"><option value="">Jogador 1...</option></select>
-        <select id="t2p2"><option value="">Jogador 2...</option></select>
+        <div id="t2p2-wrap"><select id="t2p2"><option value="">Jogador 2...</option></select></div>
       </div>
     </div>
     <p style="color:#aaa;font-size:0.83rem;margin-bottom:10px;">Quem venceu?</p>
     <div class="winner-select">
       <div class="winner-option">
         <input type="radio" name="winner" id="w1" value="1">
-        <label for="w1">🟢 Dupla 1 venceu</label>
+        <label for="w1" id="winner-label-1">🟢 Dupla 1 venceu</label>
       </div>
       <div class="winner-option">
         <input type="radio" name="winner" id="w2" value="2">
-        <label for="w2">🔵 Dupla 2 venceu</label>
+        <label for="w2" id="winner-label-2">🔵 Dupla 2 venceu</label>
       </div>
     </div>
     <div class="input-row" style="margin-bottom:14px;">
@@ -223,6 +233,7 @@ const TABS = ['jogadores', 'sortear', 'partidas', 'ranking'];
 
 let drawnTeam1 = null;
 let drawnTeam2 = null;
+let currentMatchType = '2v2';
 
 // ── Storage ──────────────────────────────────────────────────────
 function load(key) {
@@ -349,8 +360,10 @@ function sortear() {
 
 function usarSorteio() {
   if (!drawnTeam1) return;
+  currentMatchType = '2v2';
   switchTab('partidas');
   setTimeout(() => {
+    setMatchType('2v2');
     document.getElementById('t1p1').value = drawnTeam1[0].id;
     document.getElementById('t1p2').value = drawnTeam1[1].id;
     document.getElementById('t2p1').value = drawnTeam2[0].id;
@@ -359,29 +372,54 @@ function usarSorteio() {
 }
 
 // ── Partidas ─────────────────────────────────────────────────────
+function setMatchType(type) {
+  currentMatchType = type;
+  ['1v1','2v1','2v2'].forEach(t =>
+    document.getElementById('mt-' + t).classList.toggle('active', t === type)
+  );
+  const t1has2 = type === '2v2' || type === '2v1';
+  const t2has2 = type === '2v2';
+  document.getElementById('t1p2-wrap').style.display = t1has2 ? 'block' : 'none';
+  document.getElementById('t2p2-wrap').style.display = t2has2 ? 'block' : 'none';
+  const t1label = type === '1v1' || (type === '2v1') ? (type === '2v1' ? '🟢 Time 1' : '🟢 Jogador 1') : '🟢 Dupla 1';
+  const t2label = type === '2v2' ? '🔵 Dupla 2' : (type === '2v1' ? '🔵 Jogador' : '🔵 Jogador 2');
+  document.getElementById('label-t1').textContent = t1label;
+  document.getElementById('label-t2').textContent = t2label;
+  document.getElementById('winner-label-1').textContent = t1label.replace(/^../, '') + ' venceu';
+  document.getElementById('winner-label-2').textContent = t2label.replace(/^../, '') + ' venceu';
+}
+
 function populateSelects() {
   const players = load(KEYS.players);
   const opts = '<option value="">Selecionar...</option>' +
     players.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
   ['t1p1','t1p2','t2p1','t2p2'].forEach(id => document.getElementById(id).innerHTML = opts);
   document.getElementById('matchDate').value = new Date().toISOString().split('T')[0];
+  setMatchType(currentMatchType);
 }
 
 function saveMatch() {
-  const ids = ['t1p1','t1p2','t2p1','t2p2'].map(id => document.getElementById(id).value);
-  if (ids.some(v => !v)) { showAlert('alert-partidas', 'Selecione todos os 4 jogadores!'); return; }
-  if (new Set(ids).size !== 4) { showAlert('alert-partidas', 'Cada jogador só pode aparecer uma vez!'); return; }
+  const t1has2 = currentMatchType === '2v2' || currentMatchType === '2v1';
+  const t2has2 = currentMatchType === '2v2';
+
+  const team1 = [document.getElementById('t1p1').value];
+  if (t1has2) team1.push(document.getElementById('t1p2').value);
+  const team2 = [document.getElementById('t2p1').value];
+  if (t2has2) team2.push(document.getElementById('t2p2').value);
+
+  const all = [...team1, ...team2];
+  if (all.some(v => !v)) { showAlert('alert-partidas', 'Selecione todos os jogadores!'); return; }
+  if (new Set(all).size !== all.length) { showAlert('alert-partidas', 'Cada jogador só pode aparecer uma vez!'); return; }
 
   const winner = document.querySelector('input[name="winner"]:checked')?.value;
   if (!winner) { showAlert('alert-partidas', 'Selecione quem venceu!'); return; }
 
-  const date = document.getElementById('matchDate').value;
   const matches = load(KEYS.matches);
   matches.unshift({
     id: Date.now().toString(),
-    date,
-    team1: [ids[0], ids[1]],
-    team2: [ids[2], ids[3]],
+    date: document.getElementById('matchDate').value,
+    team1,
+    team2,
     winner: parseInt(winner)
   });
   save(KEYS.matches, matches);
@@ -471,6 +509,7 @@ function renderRanking() {
   const pairs = {};
   matches.forEach(m => {
     [[m.team1, m.winner === 1], [m.team2, m.winner === 2]].forEach(([team, won]) => {
+      if (team.length < 2) return;
       const key = [...team].sort().join('|');
       if (!pairs[key]) {
         pairs[key] = { names: team.map(id => players.find(p => p.id === id)?.name || '?'), wins: 0, played: 0 };
