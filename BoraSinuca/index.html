@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BoraSinuca</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', sans-serif; background: #1a1a2e; color: #eee; min-height: 100vh; }
+
+header { background: #16213e; padding: 20px; text-align: center; border-bottom: 3px solid #2d6a4f; }
+header h1 { font-size: 2rem; color: #52b788; }
+header p { color: #aaa; font-size: 0.9rem; margin-top: 4px; }
+
+nav { display: flex; background: #16213e; border-bottom: 1px solid #2d3561; }
+nav button { flex: 1; padding: 14px 8px; background: none; border: none; color: #aaa; cursor: pointer; font-size: 0.9rem; border-bottom: 3px solid transparent; transition: all 0.2s; }
+nav button.active { color: #52b788; border-bottom-color: #52b788; }
+nav button:hover:not(.active) { color: #eee; background: #1e2d4a; }
+
+.tab { display: none; padding: 20px; max-width: 720px; margin: 0 auto; }
+.tab.active { display: block; }
+
+.card { background: #16213e; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #2d3561; }
+.card h2 { color: #52b788; margin-bottom: 16px; font-size: 1.05rem; text-transform: uppercase; letter-spacing: 0.5px; }
+
+input[type="text"], input[type="date"], select {
+  padding: 10px 14px; border-radius: 8px; border: 1px solid #2d3561;
+  background: #0f3460; color: #eee; font-size: 0.95rem; outline: none; width: 100%;
+}
+input:focus, select:focus { border-color: #52b788; }
+
+.input-row { display: flex; gap: 10px; margin-bottom: 12px; }
+.input-row input { flex: 1; width: auto; }
+
+.btn { padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+.btn-primary { background: #52b788; color: #1a1a2e; }
+.btn-primary:hover { background: #74c69d; }
+.btn-danger { background: #e63946; color: #fff; }
+.btn-danger:hover { background: #ff4757; }
+.btn-secondary { background: #2d3561; color: #eee; }
+.btn-secondary:hover { background: #3d4a7a; }
+.btn-outline { background: transparent; color: #52b788; border: 2px solid #52b788; }
+.btn-outline:hover { background: #52b788; color: #1a1a2e; }
+
+/* Players */
+.player-list { list-style: none; }
+.player-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #0f3460; border-radius: 8px; margin-bottom: 8px; }
+.player-num { color: #aaa; font-size: 0.8rem; margin-right: 8px; }
+
+/* Sortear */
+.checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; margin-bottom: 16px; }
+.checkbox-item { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: #0f3460; border-radius: 8px; cursor: pointer; transition: background 0.2s; user-select: none; }
+.checkbox-item:hover { background: #1a4a8a; }
+.checkbox-item input { accent-color: #52b788; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+
+.teams-result { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; }
+.team-card { background: #0f3460; border-radius: 10px; padding: 16px; text-align: center; }
+.team-card h3 { color: #52b788; margin-bottom: 12px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+.player-tag { background: #2d3561; border-radius: 6px; padding: 7px 12px; margin: 5px 0; font-weight: 500; font-size: 0.95rem; }
+.vs-badge { font-size: 1.5rem; font-weight: 700; color: #e63946; text-align: center; }
+
+/* Partidas */
+.teams-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.team-block { background: #0f3460; border-radius: 10px; padding: 14px; }
+.team-block h3 { color: #52b788; margin-bottom: 12px; font-size: 0.85rem; }
+.team-block select { margin-bottom: 10px; }
+.team-block select:last-child { margin-bottom: 0; }
+
+.winner-select { display: flex; gap: 12px; margin-bottom: 16px; }
+.winner-option { flex: 1; }
+.winner-option input[type="radio"] { display: none; }
+.winner-option label { display: block; text-align: center; padding: 12px; border-radius: 8px; border: 2px solid #2d3561; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; }
+.winner-option input:checked + label { border-color: #52b788; background: #1e4d3a; color: #52b788; font-weight: 600; }
+
+.match-list { list-style: none; }
+.match-item { background: #0f3460; border-radius: 10px; padding: 14px; margin-bottom: 10px; }
+.match-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.match-date { color: #aaa; font-size: 0.8rem; }
+.match-teams { display: flex; align-items: center; gap: 10px; }
+.match-team { flex: 1; font-size: 0.9rem; line-height: 1.5; }
+.match-team.winner { color: #52b788; font-weight: 600; }
+.match-team.loser { color: #888; }
+.match-vs { font-weight: 700; color: #e63946; font-size: 0.9rem; }
+.badge-win { display: inline-block; background: #52b788; color: #1a1a2e; padding: 1px 7px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; margin-right: 4px; vertical-align: middle; }
+
+/* Ranking */
+.ranking-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.ranking-tab { padding: 8px 24px; border-radius: 20px; border: 2px solid #2d3561; background: none; color: #aaa; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; font-weight: 600; }
+.ranking-tab.active { border-color: #52b788; color: #52b788; background: #1e4d3a; }
+
+.rank-list { list-style: none; }
+.rank-item { display: flex; align-items: center; gap: 14px; padding: 12px 16px; background: #0f3460; border-radius: 10px; margin-bottom: 8px; }
+.rank-pos { font-size: 1.3rem; width: 36px; text-align: center; }
+.rank-info { flex: 1; }
+.rank-name { font-weight: 600; font-size: 0.95rem; }
+.rank-stats { color: #aaa; font-size: 0.78rem; margin-top: 2px; }
+.rank-wins { font-size: 1.5rem; font-weight: 700; color: #52b788; }
+
+/* Misc */
+.alert { padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; font-size: 0.88rem; }
+.alert-error { background: #3d1515; border: 1px solid #e63946; color: #ff6b6b; }
+.alert-success { background: #1e4d3a; border: 1px solid #52b788; color: #74c69d; }
+.empty { text-align: center; color: #666; padding: 40px 20px; }
+.empty .empty-icon { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+.hint { color: #aaa; font-size: 0.83rem; margin-bottom: 14px; line-height: 1.5; }
+
+@media (max-width: 500px) {
+  .teams-grid { grid-template-columns: 1fr; }
+  .teams-result { grid-template-columns: 1fr; }
+  .vs-badge { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🎱 BoraSinuca</h1>
+  <p>Gerenciador de jogatinas</p>
+</header>
+
+<nav>
+  <button class="active" onclick="switchTab('jogadores')">Jogadores</button>
+  <button onclick="switchTab('sortear')">Sortear</button>
+  <button onclick="switchTab('partidas')">Partidas</button>
+  <button onclick="switchTab('ranking')">Ranking</button>
+</nav>
+
+<!-- ── JOGADORES ── -->
+<div id="tab-jogadores" class="tab active">
+  <div class="card">
+    <h2>Adicionar Jogador</h2>
+    <div class="input-row">
+      <input type="text" id="playerName" placeholder="Nome do jogador..." onkeydown="if(event.key==='Enter')addPlayer()">
+      <button class="btn btn-primary" onclick="addPlayer()">Adicionar</button>
+    </div>
+    <div id="alert-jogadores"></div>
+  </div>
+  <div class="card">
+    <h2>Jogadores Cadastrados</h2>
+    <ul class="player-list" id="playerList"></ul>
+  </div>
+</div>
+
+<!-- ── SORTEAR ── -->
+<div id="tab-sortear" class="tab">
+  <div class="card">
+    <h2>Selecionar Jogadores</h2>
+    <p class="hint">Marque os jogadores presentes. O sorteio vai escolher 4 aleatoriamente e montar 2 duplas.</p>
+    <div id="sortearCheckboxes" class="checkbox-grid"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="sortear()">🎲 Sortear Duplas</button>
+      <button class="btn btn-secondary" onclick="toggleAll()">Marcar Todos</button>
+    </div>
+  </div>
+
+  <div id="sortearResult" class="card" style="display:none;">
+    <h2>Resultado do Sorteio</h2>
+    <div class="teams-result">
+      <div class="team-card" id="result-t1"></div>
+      <div class="vs-badge">VS</div>
+      <div class="team-card" id="result-t2"></div>
+    </div>
+    <div style="margin-top:16px;text-align:center;">
+      <button class="btn btn-outline" onclick="usarSorteio()">Usar para registrar partida →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── PARTIDAS ── -->
+<div id="tab-partidas" class="tab">
+  <div class="card">
+    <h2>Registrar Partida</h2>
+    <div class="teams-grid">
+      <div class="team-block">
+        <h3>🟢 Dupla 1</h3>
+        <select id="t1p1"><option value="">Jogador 1...</option></select>
+        <select id="t1p2"><option value="">Jogador 2...</option></select>
+      </div>
+      <div class="team-block">
+        <h3>🔵 Dupla 2</h3>
+        <select id="t2p1"><option value="">Jogador 1...</option></select>
+        <select id="t2p2"><option value="">Jogador 2...</option></select>
+      </div>
+    </div>
+    <p style="color:#aaa;font-size:0.83rem;margin-bottom:10px;">Quem venceu?</p>
+    <div class="winner-select">
+      <div class="winner-option">
+        <input type="radio" name="winner" id="w1" value="1">
+        <label for="w1">🟢 Dupla 1 venceu</label>
+      </div>
+      <div class="winner-option">
+        <input type="radio" name="winner" id="w2" value="2">
+        <label for="w2">🔵 Dupla 2 venceu</label>
+      </div>
+    </div>
+    <div class="input-row" style="margin-bottom:14px;">
+      <input type="date" id="matchDate" style="width:auto;flex:1;">
+    </div>
+    <div id="alert-partidas"></div>
+    <button class="btn btn-primary" onclick="saveMatch()" style="width:100%;padding:12px;">Salvar Partida</button>
+  </div>
+
+  <div class="card">
+    <h2>Histórico</h2>
+    <ul class="match-list" id="matchList"></ul>
+  </div>
+</div>
+
+<!-- ── RANKING ── -->
+<div id="tab-ranking" class="tab">
+  <div class="ranking-tabs">
+    <button class="ranking-tab active" onclick="switchRanking('individual')">Individual</button>
+    <button class="ranking-tab" onclick="switchRanking('duplas')">Duplas</button>
+  </div>
+  <div id="ranking-individual"></div>
+  <div id="ranking-duplas" style="display:none;"></div>
+</div>
+
+<script>
+const KEYS = { players: 'bsinuca_players', matches: 'bsinuca_matches' };
+const TABS = ['jogadores', 'sortear', 'partidas', 'ranking'];
+
+let drawnTeam1 = null;
+let drawnTeam2 = null;
+
+// ── Storage ──────────────────────────────────────────────────────
+function load(key) {
+  try { return JSON.parse(localStorage.getItem(key)) || []; } catch { return []; }
+}
+function save(key, data) { localStorage.setItem(key, JSON.stringify(data)); }
+
+// ── Utils ────────────────────────────────────────────────────────
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function showAlert(id, msg, type = 'error') {
+  const el = document.getElementById(id);
+  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  setTimeout(() => el.innerHTML = '', 3000);
+}
+function playerName(id) {
+  return load(KEYS.players).find(p => p.id === id)?.name || '?';
+}
+function posIcon(i) {
+  return ['🥇','🥈','🥉'][i] ?? `<span style="color:#aaa;font-size:1rem;">${i+1}º</span>`;
+}
+
+// ── Tabs ─────────────────────────────────────────────────────────
+function switchTab(name) {
+  TABS.forEach((t, i) => {
+    document.getElementById('tab-' + t).classList.toggle('active', t === name);
+    document.querySelectorAll('nav button')[i].classList.toggle('active', t === name);
+  });
+  if (name === 'sortear')  renderSortearCheckboxes();
+  if (name === 'partidas') { populateSelects(); renderMatchList(); }
+  if (name === 'ranking')  renderRanking();
+}
+
+// ── Jogadores ────────────────────────────────────────────────────
+function addPlayer() {
+  const input = document.getElementById('playerName');
+  const name = input.value.trim();
+  if (!name) return;
+  const players = load(KEYS.players);
+  if (players.some(p => p.name.toLowerCase() === name.toLowerCase())) {
+    showAlert('alert-jogadores', 'Esse jogador já está cadastrado!');
+    return;
+  }
+  players.push({ id: Date.now().toString(), name });
+  save(KEYS.players, players);
+  input.value = '';
+  renderPlayerList();
+  showAlert('alert-jogadores', `${esc(name)} adicionado!`, 'success');
+}
+
+function removePlayer(id) {
+  if (!confirm('Remover jogador?')) return;
+  save(KEYS.players, load(KEYS.players).filter(p => p.id !== id));
+  renderPlayerList();
+}
+
+function renderPlayerList() {
+  const players = load(KEYS.players);
+  const list = document.getElementById('playerList');
+  if (!players.length) {
+    list.innerHTML = '<div class="empty"><span class="empty-icon">👤</span>Nenhum jogador cadastrado ainda.</div>';
+    return;
+  }
+  list.innerHTML = players.map((p, i) => `
+    <li class="player-item">
+      <span><span class="player-num">#${i+1}</span> ${esc(p.name)}</span>
+      <button class="btn btn-danger" style="padding:6px 12px;font-size:0.78rem;" onclick="removePlayer('${p.id}')">Remover</button>
+    </li>
+  `).join('');
+}
+
+// ── Sortear ──────────────────────────────────────────────────────
+function renderSortearCheckboxes() {
+  const players = load(KEYS.players);
+  const el = document.getElementById('sortearCheckboxes');
+  if (!players.length) {
+    el.innerHTML = '<p style="color:#aaa;font-size:0.88rem;">Cadastre jogadores primeiro.</p>';
+    return;
+  }
+  el.innerHTML = players.map(p => `
+    <label class="checkbox-item">
+      <input type="checkbox" value="${p.id}" data-name="${esc(p.name)}">
+      ${esc(p.name)}
+    </label>
+  `).join('');
+}
+
+function toggleAll() {
+  const boxes = document.querySelectorAll('#sortearCheckboxes input');
+  const allOn = Array.from(boxes).every(b => b.checked);
+  boxes.forEach(b => b.checked = !allOn);
+}
+
+function sortear() {
+  const checked = Array.from(document.querySelectorAll('#sortearCheckboxes input:checked'));
+  if (checked.length < 4) { alert('Selecione pelo menos 4 jogadores!'); return; }
+
+  const selected = checked.map(b => ({ id: b.value, name: b.dataset.name }));
+  const four = shuffle(selected).slice(0, 4);
+  drawnTeam1 = [four[0], four[1]];
+  drawnTeam2 = [four[2], four[3]];
+
+  document.getElementById('result-t1').innerHTML = `
+    <h3>Dupla 1</h3>
+    <div class="player-tag">${esc(drawnTeam1[0].name)}</div>
+    <div class="player-tag">${esc(drawnTeam1[1].name)}</div>
+  `;
+  document.getElementById('result-t2').innerHTML = `
+    <h3>Dupla 2</h3>
+    <div class="player-tag">${esc(drawnTeam2[0].name)}</div>
+    <div class="player-tag">${esc(drawnTeam2[1].name)}</div>
+  `;
+  document.getElementById('sortearResult').style.display = 'block';
+}
+
+function usarSorteio() {
+  if (!drawnTeam1) return;
+  switchTab('partidas');
+  setTimeout(() => {
+    document.getElementById('t1p1').value = drawnTeam1[0].id;
+    document.getElementById('t1p2').value = drawnTeam1[1].id;
+    document.getElementById('t2p1').value = drawnTeam2[0].id;
+    document.getElementById('t2p2').value = drawnTeam2[1].id;
+  }, 30);
+}
+
+// ── Partidas ─────────────────────────────────────────────────────
+function populateSelects() {
+  const players = load(KEYS.players);
+  const opts = '<option value="">Selecionar...</option>' +
+    players.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('');
+  ['t1p1','t1p2','t2p1','t2p2'].forEach(id => document.getElementById(id).innerHTML = opts);
+  document.getElementById('matchDate').value = new Date().toISOString().split('T')[0];
+}
+
+function saveMatch() {
+  const ids = ['t1p1','t1p2','t2p1','t2p2'].map(id => document.getElementById(id).value);
+  if (ids.some(v => !v)) { showAlert('alert-partidas', 'Selecione todos os 4 jogadores!'); return; }
+  if (new Set(ids).size !== 4) { showAlert('alert-partidas', 'Cada jogador só pode aparecer uma vez!'); return; }
+
+  const winner = document.querySelector('input[name="winner"]:checked')?.value;
+  if (!winner) { showAlert('alert-partidas', 'Selecione quem venceu!'); return; }
+
+  const date = document.getElementById('matchDate').value;
+  const matches = load(KEYS.matches);
+  matches.unshift({
+    id: Date.now().toString(),
+    date,
+    team1: [ids[0], ids[1]],
+    team2: [ids[2], ids[3]],
+    winner: parseInt(winner)
+  });
+  save(KEYS.matches, matches);
+  showAlert('alert-partidas', 'Partida registrada!', 'success');
+  ['t1p1','t1p2','t2p1','t2p2'].forEach(id => document.getElementById(id).value = '');
+  document.querySelectorAll('input[name="winner"]').forEach(r => r.checked = false);
+  renderMatchList();
+}
+
+function deleteMatch(id) {
+  if (!confirm('Remover esta partida?')) return;
+  save(KEYS.matches, load(KEYS.matches).filter(m => m.id !== id));
+  renderMatchList();
+}
+
+function renderMatchList() {
+  const matches = load(KEYS.matches);
+  const list = document.getElementById('matchList');
+  if (!matches.length) {
+    list.innerHTML = '<div class="empty"><span class="empty-icon">🎱</span>Nenhuma partida registrada ainda.</div>';
+    return;
+  }
+  list.innerHTML = matches.map(m => {
+    const t1names = m.team1.map(id => esc(playerName(id))).join(' & ');
+    const t2names = m.team2.map(id => esc(playerName(id))).join(' & ');
+    const t1win = m.winner === 1;
+    const dateStr = m.date ? new Date(m.date + 'T12:00:00').toLocaleDateString('pt-BR') : '';
+    return `
+      <li class="match-item">
+        <div class="match-header">
+          <span class="match-date">${dateStr}</span>
+          <button class="btn btn-danger" style="padding:4px 10px;font-size:0.75rem;" onclick="deleteMatch('${m.id}')">✕</button>
+        </div>
+        <div class="match-teams">
+          <div class="match-team ${t1win ? 'winner' : 'loser'}">
+            ${t1win ? '<span class="badge-win">WIN</span>' : ''} ${t1names}
+          </div>
+          <div class="match-vs">VS</div>
+          <div class="match-team ${!t1win ? 'winner' : 'loser'}" style="text-align:right;">
+            ${!t1win ? '<span class="badge-win">WIN</span>' : ''} ${t2names}
+          </div>
+        </div>
+      </li>
+    `;
+  }).join('');
+}
+
+// ── Ranking ──────────────────────────────────────────────────────
+function switchRanking(type) {
+  document.querySelectorAll('.ranking-tab').forEach((t, i) =>
+    t.classList.toggle('active', (type === 'individual') === (i === 0))
+  );
+  document.getElementById('ranking-individual').style.display = type === 'individual' ? 'block' : 'none';
+  document.getElementById('ranking-duplas').style.display = type === 'duplas' ? 'block' : 'none';
+}
+
+function renderRanking() {
+  const players = load(KEYS.players);
+  const matches = load(KEYS.matches);
+
+  // Individual
+  const ind = {};
+  players.forEach(p => ind[p.id] = { name: p.name, wins: 0, played: 0 });
+  matches.forEach(m => {
+    const all = [...m.team1, ...m.team2];
+    const win = m.winner === 1 ? m.team1 : m.team2;
+    all.forEach(id => { if (ind[id]) ind[id].played++; });
+    win.forEach(id => { if (ind[id]) ind[id].wins++; });
+  });
+  const indSorted = Object.values(ind).filter(p => p.played > 0)
+    .sort((a, b) => b.wins - a.wins || b.played - a.played);
+
+  const indEl = document.getElementById('ranking-individual');
+  indEl.innerHTML = indSorted.length
+    ? `<ul class="rank-list">${indSorted.map((p, i) => `
+        <li class="rank-item">
+          <span class="rank-pos">${posIcon(i)}</span>
+          <div class="rank-info">
+            <div class="rank-name">${esc(p.name)}</div>
+            <div class="rank-stats">${p.played} partida${p.played !== 1 ? 's' : ''} · ${Math.round(p.wins/p.played*100)}% vitórias</div>
+          </div>
+          <div class="rank-wins">${p.wins}</div>
+        </li>`).join('')}</ul>`
+    : '<div class="empty"><span class="empty-icon">🏆</span>Registre partidas para ver o ranking.</div>';
+
+  // Duplas
+  const pairs = {};
+  matches.forEach(m => {
+    [[m.team1, m.winner === 1], [m.team2, m.winner === 2]].forEach(([team, won]) => {
+      const key = [...team].sort().join('|');
+      if (!pairs[key]) {
+        pairs[key] = { names: team.map(id => players.find(p => p.id === id)?.name || '?'), wins: 0, played: 0 };
+      }
+      pairs[key].played++;
+      if (won) pairs[key].wins++;
+    });
+  });
+  const pairsSorted = Object.values(pairs).sort((a, b) => b.wins - a.wins || b.played - a.played);
+
+  const pairEl = document.getElementById('ranking-duplas');
+  pairEl.innerHTML = pairsSorted.length
+    ? `<ul class="rank-list">${pairsSorted.map((p, i) => `
+        <li class="rank-item">
+          <span class="rank-pos">${posIcon(i)}</span>
+          <div class="rank-info">
+            <div class="rank-name">${p.names.map(esc).join(' & ')}</div>
+            <div class="rank-stats">${p.played} partida${p.played !== 1 ? 's' : ''} · ${Math.round(p.wins/p.played*100)}% vitórias</div>
+          </div>
+          <div class="rank-wins">${p.wins}</div>
+        </li>`).join('')}</ul>`
+    : '<div class="empty"><span class="empty-icon">🏆</span>Registre partidas para ver o ranking.</div>';
+}
+
+// ── Init ─────────────────────────────────────────────────────────
+renderPlayerList();
+</script>
+</body>
+</html>
